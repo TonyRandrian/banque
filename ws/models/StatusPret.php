@@ -30,9 +30,9 @@ class StatusPret {
         $db = getDB();
         $stmt = $db->prepare("UPDATE status_pret SET date_status = ?, enum_pret_id = ?, pret_id = ? WHERE id = ?");
         $stmt->execute([
-            $data->date_status,
-            $data->enum_pret_id,
-            $data->pret_id,
+            $data["date_status"],
+            $data["enum_pret_id"],
+            $data["pret_id"],
             $id
         ]);
     }

@@ -19,8 +19,8 @@ class StatusPretController {
     }
 
     public static function update($id) {
-        $data = Flight::request()->data;
-        StatusPret::update($id, $data);
+        parse_str(file_get_contents("php://input"),$put_vars);
+        StatusPret::update($id, $put_vars);
         Flight::json(['message' => 'Status prêt modifié']);
     }
 

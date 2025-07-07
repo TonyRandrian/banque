@@ -114,18 +114,6 @@ CREATE TABLE pret
     FOREIGN KEY (type_pret_id) REFERENCES type_pret (id)
 );
 
-CREATE TABLE paiement
-(
-    id            INT AUTO_INCREMENT,
-    date_paiement DATE           NOT NULL,
-    montant       DECIMAL(15, 2) NOT NULL,
-    pret_id       INT            NOT NULL,
-    employees_id  INT            NOT NULL,
-    PRIMARY KEY (id),
-    FOREIGN KEY (pret_id) REFERENCES pret (id),
-    FOREIGN KEY (employees_id) REFERENCES employe (id)
-);
-
 CREATE TABLE paiement_modalite
 (
     id                 INT AUTO_INCREMENT,
@@ -134,6 +122,20 @@ CREATE TABLE paiement_modalite
     pret_id            INT            NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (pret_id) REFERENCES pret (id)
+);
+
+CREATE TABLE paiement
+(
+    id            INT AUTO_INCREMENT,
+    date_paiement DATE           NOT NULL,
+    montant       DECIMAL(15, 2) NOT NULL,
+    pret_id       INT            NOT NULL,
+    employees_id  INT            NOT NULL,
+    paiement_modalite_id INT,
+    PRIMARY KEY (id),
+    FOREIGN KEY (pret_id) REFERENCES pret (id),
+    FOREIGN KEY (employees_id) REFERENCES employe (id),
+    FOREIGN KEY (paiement_modalite_id) REFERENCES paiement_modalite (id)
 );
 
 CREATE TABLE status_client

@@ -13,6 +13,11 @@
   </style>
 </head>
 <body>
+  <nav>
+    <a href="index.html">Gestion des étudiants</a> |
+    <a href="pret.html">Gestion des prêts</a> |
+    <a href="status_pret.html">Gestion des statuts de prêt</a>
+  </nav>
   <h1>Gestion des statuts de prêt</h1>
   <div>
     <input type="hidden" id="id">
@@ -34,7 +39,7 @@
     <tbody></tbody>
   </table>
   <script>
-    const apiBase = "http://localhost/banque/ws/";
+    const apiBase = "http://localhost/banque/ws";
     function ajax(method, url, data, callback) {
       const xhr = new XMLHttpRequest();
       xhr.open(method, apiBase + url, true);
