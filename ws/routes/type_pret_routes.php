@@ -1,16 +1,20 @@
 <?php
 require_once __DIR__ . '/../controllers/TypePretController.php';
+require_once __DIR__ . '/../helpers/AppConfig.php';
 
 // Route pour servir la page HTML
 Flight::route('GET /type-pret', function() {
-    $htmlPath = __DIR__ . '/../../type-pret.html';
-    if (file_exists($htmlPath)) {
-        $content = file_get_contents($htmlPath);
-        Flight::response()->header('Content-Type', 'text/html; charset=utf-8');
-        echo $content;
-    } else {
-        Flight::notFound();
-    }
+    $data = [
+        'pageTitle' => "Gestion des Types de Prêt - Banque Moderne",
+        'page' => "type-pret",
+        'sidebarItems' => AppConfig::getSidebarItems(),
+        'cssPath' => AppConfig::getCssPath(),
+        'activePage' => 'type-pret'
+    ];
+    
+    // Extraction des variables pour le template
+    extract($data);
+    include __DIR__ . '/../../templates.php';
 });
 
 // Routes API
