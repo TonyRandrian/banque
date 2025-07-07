@@ -9,6 +9,15 @@ insert into modalite(libelle, nb_mois) values
 ("Modalité 3", 6),
 ("Modalité 4", 12);
 
+insert into enum_status_pret(libelle) values
+("En attente"),
+("Accepté"),
+("Refusé"),
+("En cours de traitement"),
+("Terminé");
+
+
+
 drop database banque;
 create database banque;
 use banque;

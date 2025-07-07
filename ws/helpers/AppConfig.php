@@ -15,6 +15,14 @@ class AppConfig
             'fond' => [
                 'title' => 'Gestion des Fonds - Banque Moderne', 
                 'content' => 'fond'
+            ],
+            'pret' => [
+                'title' => 'Gestion des Prêts - Banque Moderne',
+                'content' => 'pret'
+            ],
+            'status-pret' => [
+                'title' => 'Gestion des Statuts de Prêt - Banque Moderne',
+                'content' => 'status-pret'
             ]
         ];
     }
@@ -39,6 +47,18 @@ class AppConfig
                 'link' => '/banque/ws/fond',
                 'icon' => '📊',
                 'page' => 'fond'
+            ],
+            [
+                'label' => 'Prêts',
+                'link' => '/banque/ws/pret',
+                'icon' => '🏦',
+                'page' => 'pret'
+            ],
+            [
+                'label' => 'Statuts de Prêts',
+                'link' => '/banque/ws/status-pret',
+                'icon' => '📋',
+                'page' => 'status-pret'
             ]
         ];
     }
@@ -76,6 +96,10 @@ class AppConfig
             return 'type-pret';
         } elseif (strpos($path, '/fond') !== false) {
             return 'fond';
+        } elseif (strpos($path, '/pret') !== false && strpos($path, '/status-pret') === false) {
+            return 'pret';
+        } elseif (strpos($path, '/status-pret') !== false) {
+            return 'status-pret';
         } elseif (isset($_GET['page'])) {
             return $_GET['page'];
         } elseif ($path === '/banque/ws' || $path === '/banque' || $path === '' || $path === '/banque/index.php') {

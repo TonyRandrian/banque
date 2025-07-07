@@ -24,12 +24,14 @@ class Pret {
 
     public static function create($data) {
         $db = getDB();
+        
+        // La colonne date_demande est de type DATE, pas besoin de conversion
         $stmt = $db->prepare("INSERT INTO pret (duree_remboursement, montant, date_demande, modalite_id, type_pret_id)
                               VALUES (?, ?, ?, ?, ?)");
         $stmt->execute([
             $data['duree_remboursement'],
             $data['montant'],
-            $data['date_demande'],
+            $data['date_demande'], // Garder le format YYYY-MM-DD
             $data['modalite_id'],
             $data['type_pret_id']
         ]);
@@ -38,12 +40,14 @@ class Pret {
 
     public static function update($id, $data) {
         $db = getDB();
+        
+        // La colonne date_demande est de type DATE, pas besoin de conversion
         $stmt = $db->prepare("UPDATE pret SET duree_remboursement=?, montant=?, date_demande=?, modalite_id=?, type_pret_id=?
                               WHERE id=?");
         $stmt->execute([
             $data['duree_remboursement'],
             $data['montant'],
-            $data['date_demande'],
+            $data['date_demande'], // Garder le format YYYY-MM-DD
             $data['modalite_id'],
             $data['type_pret_id'],
             $id

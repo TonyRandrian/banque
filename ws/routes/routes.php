@@ -7,4 +7,5 @@ require_once 'enum_status_pret_route.php';
 require_once 'modalite_route.php';
 require_once 'status_pret_route.php';
 
-
+// Routes pour les pages web avec template
+require_once __DIR__ . '/../helpers/AppConfig.php';
