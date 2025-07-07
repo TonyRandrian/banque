@@ -23,6 +23,10 @@ class AppConfig
             'status-pret' => [
                 'title' => 'Gestion des Statuts de Prêt - Banque Moderne',
                 'content' => 'status-pret'
+            ],
+            'compte-client' => [
+                'title' => 'Création de Comptes Clients - Banque Moderne',
+                'content' => 'compte-client'
             ]
         ];
     }
@@ -59,6 +63,12 @@ class AppConfig
                 'link' => '/banque/ws/status-pret',
                 'icon' => '📋',
                 'page' => 'status-pret'
+            ],
+            [
+                'label' => 'Comptes Clients',
+                'link' => '/banque/ws/compte-client',
+                'icon' => '👥',
+                'page' => 'compte-client'
             ]
         ];
     }

@@ -11,7 +11,9 @@ values ('Mensuel', 1);
 insert into enum_status_pret(libelle)
 values ('en attente'),
        ('accepté'),
-       ('refusé');
+       ('refusé'),
+       ('en cours de traitement'),
+       ('terminé');
 
 -- Prêts
 insert into pret(duree_remboursement, montant, date_demande, modalite_id, type_pret_id)
@@ -65,3 +67,8 @@ values ('2024-03-01', 2172.57, 320.00, 1852.57, 2),
        ('2026-01-01', 2172.57, 28.89, 2143.68, 2),
        ('2026-02-01', 2172.57, 14.72, 2157.85, 2),
        ('2026-03-01', 2172.57, 0.47, 2172.10, 2);
+
+-- Employés pour les tests
+insert into employe(nom, prenom, email, mdp) values
+("Dupont", "Jean", "jean.dupont@banque.fr", "$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi"),
+("Martin", "Marie", "marie.martin@banque.fr", "$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi");
