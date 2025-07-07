@@ -471,6 +471,11 @@ table tr:hover {
     color: white;
 }
 
+.badge-info {
+    background: linear-gradient(135deg, #17a2b8, #138496);
+    color: white;
+}
+
 /* Alertes */
 .alert {
     padding: 15px 20px;
