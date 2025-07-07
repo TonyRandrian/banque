@@ -5,81 +5,104 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ajouter un fond</title>
     <style>
-            body { font-family: sans-serif; padding: 20px; }
-    input, button { margin: 5px; padding: 5px; }
-    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
-    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-    th { background-color: #f2f2f2; }
-    .nav-btn { margin-bottom: 20px; }
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+        }
+
+        input, button {
+            margin: 5px;
+            padding: 5px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .nav-btn {
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
-    <h1>Ajouter un fond</h1>
-    <form id="fond-form">
-        <label for="montant">Montant :</label>
-        <input type="number" id="montant" name="montant" step="0.01" required>
-        <button type="submit">Ajouter</button>
-    </form>
-    <div id="result"></div>
-    <h2>Liste des transactions</h2>
-    <table id="table-fonds">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Date</th>
-                <th>Solde</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
-    <script>
-        const apiBase = "http://localhost/Web/S4/banque/ws";
+<h1>Ajouter un fond</h1>
+<form id="fond-form">
+    <label for="montant">Montant :</label>
+    <input type="number" id="montant" name="montant" step="0.01" required>
+    <button type="submit">Ajouter</button>
+</form>
+<div id="result"></div>
+<h2>Liste des transactions</h2>
+<table id="table-fonds">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Date</th>
+        <th>Solde</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+<script>
+    const apiBase = "http://localhost/Web/S4/banque/ws";
 
-        function ajax(method, url, data, callback) {
-            const xhr = new XMLHttpRequest();
-            xhr.open(method, apiBase + url, true);
-            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-            xhr.onreadystatechange = () => {
-                if (xhr.readyState === 4) {
-                    if (xhr.status === 200) {
-                        callback(JSON.parse(xhr.responseText));
-                    } else {
-                        callback({message: "Erreur lors de l'ajout"});
-                    }
+    function ajax(method, url, data, callback) {
+        const xhr = new XMLHttpRequest();
+        xhr.open(method, apiBase + url, true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    callback(JSON.parse(xhr.responseText));
+                } else {
+                    callback({message: "Erreur lors de l'ajout"});
                 }
-            };
-            xhr.send(data);
-        }
+            }
+        };
+        xhr.send(data);
+    }
 
-        function chargerFonds() {
-            ajax("GET", "/api/fond/", null, function(data) {
-                const tbody = document.querySelector("#table-fonds tbody");
-                tbody.innerHTML = "";
-                data.forEach(f => {
-                    const tr = document.createElement("tr");
-                    tr.innerHTML = `
+    function chargerFonds() {
+        ajax("GET", "/api/fond/", null, function (data) {
+            const tbody = document.querySelector("#table-fonds tbody");
+            tbody.innerHTML = "";
+            data.forEach(f => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
                         <td>${f.id}</td>
                         <td>${f.date_mouvement}</td>
                         <td>${f.solde}</td>
                     `;
-                    tbody.appendChild(tr);
-                });
-            });
-        }
-
-        document.getElementById('fond-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const montant = document.getElementById('montant').value;
-            const params = `montant=${encodeURIComponent(montant)}`;
-            ajax("POST", "/api/fond/ajout", params, function(data) {
-                document.getElementById('result').textContent = data.message || 'Ajouté';
-                document.getElementById('fond-form').reset();
-                chargerFonds();
+                tbody.appendChild(tr);
             });
         });
+    }
 
-        // Initial load
-        chargerFonds();
-    </script>
+    document.getElementById('fond-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const montant = document.getElementById('montant').value;
+        const params = `montant=${encodeURIComponent(montant)}`;
+        ajax("POST", "/api/fond/ajout", params, function (data) {
+            document.getElementById('result').textContent = data.message || 'Ajouté';
+            document.getElementById('fond-form').reset();
+            chargerFonds();
+        });
+    });
+
+    // Initial load
+    chargerFonds();
+</script>
 </body>
 </html>
