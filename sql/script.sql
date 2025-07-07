@@ -106,6 +106,7 @@ CREATE TABLE pret
     employees_id        INT            NOT NULL,
     compte_client_id    INT            NOT NULL,
     type_pret_id        INT            NOT NULL,
+
     PRIMARY KEY (id),
     FOREIGN KEY (modalite_id) REFERENCES modalite (id),
     FOREIGN KEY (employees_id) REFERENCES employe (id),
