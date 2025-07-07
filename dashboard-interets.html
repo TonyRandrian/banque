@@ -149,18 +149,19 @@
 <body>
     <div class="container">
         <h1>📊 Intérêts gagnés par mois</h1>
-        
         <div class="filter-section">
             <div class="filter-bar">
                 <label for="date_debut">📅 Période début :</label>
                 <input type="month" id="date_debut">
-                
                 <label for="date_fin">📅 Période fin :</label>
                 <input type="month" id="date_fin">
-                
                 <button onclick="chargerDonnees()">🔍 Filtrer</button>
                 <button onclick="exporterCSV()">📄 Exporter CSV</button>
             </div>
+        </div>
+
+        <div style="width:100%;max-width:1300px;margin:30px auto 0 auto;">
+            <canvas id="chart-interets" height="420"></canvas>
         </div>
 
         <table id="table-interets">
@@ -179,9 +180,11 @@
         <div id="total-global" style="margin-top:30px;font-size:1.2em;font-weight:bold;"></div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         const apiBase = "http://localhost/Web/S4/banque/ws";
         let currentData = {};
+        let chart = null;
 
         function ajax(method, url, data, callback, errorCallback) {
             const xhr = new XMLHttpRequest();
@@ -219,8 +222,10 @@
             ajax("POST", "/api/interets/mois", params, function(data) {
                 currentData = data;
                 afficherTableau(data);
+                afficherGraphique(data);
             }, function(error) {
                 tbody.innerHTML = `<tr><td colspan="2" class="no-data">Erreur: ${error}</td></tr>`;
+                afficherGraphique({});
             });
         }
 
@@ -256,6 +261,69 @@
             tbody.appendChild(totalRow);
 
             document.getElementById('total-global').textContent = `Total intérêts gagnés sur la période : ${totalInterets.toLocaleString('fr-FR')} €`;
+        }
+
+        function afficherGraphique(data) {
+            const canvas = document.getElementById('chart-interets');
+            const ctx = canvas.getContext('2d');
+            const labels = Object.keys(data).map(formatMois);
+            const values = Object.values(data).map(v => parseFloat(v));
+
+            // Fix: reset canvas size to avoid infinite growth
+            canvas.width = canvas.parentElement.offsetWidth;
+            canvas.height = 420;
+
+            if (chart) {
+                chart.destroy();
+                chart = null;
+            }
+
+            if (labels.length === 0) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                return;
+            }
+
+            chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Intérêts gagnés (€)',
+                        data: values,
+                        backgroundColor: 'rgba(52, 152, 219, 0.7)',
+                        borderColor: 'rgba(41, 128, 185, 1)',
+                        borderWidth: 1,
+                        barPercentage: 0.7,
+                        categoryPercentage: 0.8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        title: {
+                            display: true,
+                            text: 'Évolution des intérêts gagnés par mois',
+                            font: { size: 20 }
+                        }
+                    },
+                    layout: {
+                        padding: 20
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'Intérêts (€)' },
+                            ticks: { font: { size: 16 } }
+                        },
+                        x: {
+                            title: { display: true, text: 'Mois' },
+                            ticks: { font: { size: 16 } }
+                        }
+                    }
+                }
+            });
         }
 
         function exporterCSV() {
