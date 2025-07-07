@@ -1,6 +1,6 @@
 <?php
 require 'vendor/autoload.php';
 require 'db.php';
-require 'routes/routes.php';
+require 'routes/etudiant_routes.php';
 
 Flight::start();

@@ -39,4 +39,11 @@ class Fond
         $stmt = $db->prepare("DELETE FROM tresorerie WHERE id = ?");
         $stmt->execute([$id]);
     }
+
+    public static function getLast()
+    {
+        $db = getDB();
+        $stmt = $db->query("SELECT * FROM tresorerie ORDER BY date_mouvement DESC LIMIT 1");
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }
