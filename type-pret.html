@@ -135,25 +135,26 @@
 
     <h1>Gestion des Types de Prêt</h1>
 
-    <div class="form-container">
-        <input type="hidden" id="id">
-        <input type="text" id="libelle" placeholder="Libellé du type de prêt">
-        <input type="number" id="taux" placeholder="Taux (%)" step="0.01" min="0" max="100">
-        <button onclick="ajouterOuModifier()">Ajouter / Modifier</button>
-        <button onclick="resetForm()" style="background-color: #6c757d;">Annuler</button>
-    </div>
+  <div class="form-container">
+    <input type="hidden" id="id">
+    <input type="text" id="libelle" placeholder="Libellé du type de prêt">
+    <input type="number" id="taux" placeholder="Taux (%)" step="0.01" min="0" max="100">
+    <input type="number" id="taux_assurance" placeholder="Taux assurance (%)" step="0.01" min="0" max="100">
+    <button onclick="ajouterOuModifier()">Ajouter / Modifier</button>
+    <button onclick="resetForm()" style="background-color: #6c757d;">Annuler</button>
+  </div>
 
-    <table id="table-type-prets">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Libellé</th>
-            <th>Taux (%)</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+  <table id="table-type-prets">
+    <thead>
+      <tr>
+        <th>Libellé</th>
+        <th>Taux (%)</th>
+        <th>Taux Assurance (%)</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 </div>
 
 <script>
@@ -189,59 +190,65 @@
         xhr.send(data);
     }
 
-    function chargerTypePrets() {
-        ajax("GET", "/type-prets", null, (data) => {
-            const tbody = document.querySelector("#table-type-prets tbody");
-            tbody.innerHTML = "";
-
-            // Vérifier si data est un tableau
-            if (!Array.isArray(data)) {
-                console.error('Les données reçues ne sont pas un tableau:', data);
-                tbody.innerHTML = '<tr><td colspan="4">Erreur: Format de données invalide</td></tr>';
-                return;
-            }
-
-            if (data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4">Aucun type de prêt trouvé</td></tr>';
-                return;
-            }
-
-            data.forEach(typePret => {
-                const tr = document.createElement("tr");
-                tr.innerHTML = `
-          <td>${typePret.id}</td>
+  function chargerTypePrets() {
+    ajax("GET", "/type-prets", null, (data) => {
+      const tbody = document.querySelector("#table-type-prets tbody");
+      tbody.innerHTML = "";
+      
+      // Vérifier si data est un tableau
+      if (!Array.isArray(data)) {
+        console.error('Les données reçues ne sont pas un tableau:', data);
+        tbody.innerHTML = '<tr><td colspan="5">Erreur: Format de données invalide</td></tr>';
+        return;
+      }
+      
+      if (data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5">Aucun type de prêt trouvé</td></tr>';
+        return;
+      }
+      
+      data.forEach(typePret => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
           <td>${typePret.libelle}</td>
           <td class="taux-cell">${parseFloat(typePret.taux).toFixed(2)}%</td>
+          <td class="taux-cell">${parseFloat(typePret.taux_assurance || 0).toFixed(2)}%</td>
           <td>
             <button class="btn-edit" onclick='remplirFormulaire(${JSON.stringify(typePret)})'>✏️ Modifier</button>
             <button class="btn-delete" onclick='supprimerTypePret(${typePret.id})'>🗑️ Supprimer</button>
           </td>
         `;
-                tbody.appendChild(tr);
-            });
-        }, (error) => {
-            console.error('Erreur lors du chargement:', error);
-            const tbody = document.querySelector("#table-type-prets tbody");
-            tbody.innerHTML = `<tr><td colspan="4">Erreur: ${error}</td></tr>`;
-        });
+        tbody.appendChild(tr);
+      });
+    }, (error) => {
+      console.error('Erreur lors du chargement:', error);
+      const tbody = document.querySelector("#table-type-prets tbody");
+      tbody.innerHTML = `<tr><td colspan="5">Erreur: ${error}</td></tr>`;
+    });
+  }
+
+  function ajouterOuModifier() {
+    const id = document.getElementById("id").value;
+    const libelle = document.getElementById("libelle").value;
+    const taux = document.getElementById("taux").value;
+    const taux_assurance = document.getElementById("taux_assurance").value || 0;
+
+    if (!libelle || !taux) {
+      alert("Veuillez remplir tous les champs");
+      return;
     }
-
-    function ajouterOuModifier() {
-        const id = document.getElementById("id").value;
-        const libelle = document.getElementById("libelle").value;
-        const taux = document.getElementById("taux").value;
-
-        if (!libelle || !taux) {
-            alert("Veuillez remplir tous les champs");
-            return;
-        }
 
         if (parseFloat(taux) < 0 || parseFloat(taux) > 100) {
             alert("Le taux doit être compris entre 0 et 100%");
             return;
         }
 
-        const data = `libelle=${encodeURIComponent(libelle)}&taux=${taux}`;
+    if (parseFloat(taux_assurance) < 0 || parseFloat(taux_assurance) > 100) {
+      alert("Le taux d'assurance doit être compris entre 0 et 100%");
+      return;
+    }
+
+    const data = `libelle=${encodeURIComponent(libelle)}&taux=${taux}&taux_assurance=${taux_assurance}`;
 
         if (id) {
             ajax("PUT", `/type-prets/${id}`, data, (response) => {
@@ -262,11 +269,12 @@
         }
     }
 
-    function remplirFormulaire(typePret) {
-        document.getElementById("id").value = typePret.id;
-        document.getElementById("libelle").value = typePret.libelle;
-        document.getElementById("taux").value = typePret.taux;
-    }
+  function remplirFormulaire(typePret) {
+    document.getElementById("id").value = typePret.id;
+    document.getElementById("libelle").value = typePret.libelle;
+    document.getElementById("taux").value = typePret.taux;
+    document.getElementById("taux_assurance").value = typePret.taux_assurance || 0;
+  }
 
     function supprimerTypePret(id) {
         if (confirm("Êtes-vous sûr de vouloir supprimer ce type de prêt ?")) {
@@ -279,11 +287,12 @@
         }
     }
 
-    function resetForm() {
-        document.getElementById("id").value = "";
-        document.getElementById("libelle").value = "";
-        document.getElementById("taux").value = "";
-    }
+  function resetForm() {
+    document.getElementById("id").value = "";
+    document.getElementById("libelle").value = "";
+    document.getElementById("taux").value = "";
+    document.getElementById("taux_assurance").value = "";
+  }
 
     // Charger les types de prêt au démarrage
     chargerTypePrets();
