@@ -1,6 +1,9 @@
 <?php
 require_once __DIR__ . '/../controllers/TypePretController.php';
 require_once __DIR__ . '/../helpers/AppConfig.php';
+require_once __DIR__ . '/../controllers/TypePretController.php';
+
+Flight::route('GET /type_pret', ['TypePretController', 'getAll']);
 
 // Route pour servir la page HTML
 Flight::route('GET /type-pret', function() {
