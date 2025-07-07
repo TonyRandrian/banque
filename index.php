@@ -41,16 +41,11 @@ $activePage = 'accueil'; // Marquer la page accueil comme active
         </div>
     </nav>
 
-    <!-- Main Content -->
     <div class="content">
         <div class="welcome-container">
             <div class="welcome-left">
-                <!-- Grand SVG bancaire -->
                 <svg width="500" height="400" viewBox="0 0 500 400" fill="none" xmlns="http://www.w3.org/2000/svg" class="welcome-svg">
-                    <!-- Bâtiment bancaire -->
                     <rect x="100" y="150" width="300" height="200" fill="#2c5aa0" stroke="#1e3a8a" stroke-width="2"/>
-                    
-                    <!-- Colonnes -->
                     <rect x="120" y="120" width="20" height="230" fill="#1e3a8a"/>
                     <rect x="160" y="120" width="20" height="230" fill="#1e3a8a"/>
                     <rect x="200" y="120" width="20" height="230" fill="#1e3a8a"/>
