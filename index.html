@@ -18,6 +18,11 @@
 
   <h1>Gestion des étudiants</h1>
 
+  <div style="margin-bottom: 20px;">
+    <a href="type-pret.html" style="color: #007bff; text-decoration: none; font-weight: bold;">➤ Gérer les Types de Prêt</a>
+    <button onclick="window.location.href='ws/type-pret'" style="margin-left: 10px; background-color: #28a745; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer;">Test Route Type-Prêt</button>
+  </div>
+
   <div>
     <input type="hidden" id="id">
     <input type="text" id="nom" placeholder="Nom">
@@ -37,7 +42,7 @@
   </table>
 
   <script>
-    const apiBase = "http://localhost:8888/tp-flightphp-crud/ws";
+    const apiBase = "http://localhost/banque/ws";
 
     function ajax(method, url, data, callback) {
       const xhr = new XMLHttpRequest();
