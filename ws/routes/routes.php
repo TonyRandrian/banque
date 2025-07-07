@@ -9,3 +9,11 @@ require_once 'status_pret_route.php';
 
 // Routes pour les pages web avec template
 require_once __DIR__ . '/../helpers/AppConfig.php';
+Flight::route('POST /api/ajout/fond', ['FondController', 'create']);
+
+require_once __DIR__ . '/status_pret_route.php';
+require_once __DIR__ . '/type_pret_route.php';
+require_once __DIR__ . '/enum_status_pret_route.php';
+require_once __DIR__ . '/modalite_route.php';
+
+require_once __DIR__ . '/interet_route.php';
