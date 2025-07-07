@@ -7,9 +7,10 @@ CREATE TABLE enum_status_pret
 
 CREATE TABLE type_pret
 (
-    id      INT AUTO_INCREMENT,
-    libelle VARCHAR(50)    NOT NULL,
-    taux    DECIMAL(15, 2) NOT NULL,
+    id            INT AUTO_INCREMENT,
+    libelle       VARCHAR(50)    NOT NULL,
+    taux          DECIMAL(15, 2) NOT NULL,
+    taux_assurance DECIMAL(15, 2) NOT NULL DEFAULT 0.00,
     PRIMARY KEY (id)
 );
 
