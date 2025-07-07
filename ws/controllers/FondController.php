@@ -18,7 +18,16 @@ class FondController
     public static function create()
     {
         $data = Flight::request()->data;
-        $id = Fond::create($data);
+        $last = Fond::getLast();
+        $lastSolde = $last ? floatval($last['solde']) : 0;
+        $newSolde = $lastSolde + floatval($data->montant);
+
+        // On insère le nouveau solde et la date reçue
+        $insertData = (object)[
+            'montant' => $newSolde,
+            'date_creation' => $data->date_creation
+        ];
+        $id = Fond::create($insertData);
         Flight::json(['message' => 'Fond ajouté', 'id' => $id]);
     }
 

@@ -1,12 +1,13 @@
 CREATE TABLE enum_pret
 (
-    id       INT AUTO_INCREMENT PRIMARY KEY,
-    libelle_ VARCHAR(255) NOT NULL
+    id      INT AUTO_INCREMENT PRIMARY KEY,
+    libelle VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE modalite
 (
     id      INT AUTO_INCREMENT PRIMARY KEY,
+    libelle VARCHAR(50), -- mensuel, trimestriel, semestriel
     nb_mois INT NOT NULL
 );
 
@@ -68,12 +69,9 @@ CREATE TABLE enum_status_compte
 
 CREATE TABLE type_pret
 (
-    id          INT AUTO_INCREMENT PRIMARY KEY,
-    libelle     VARCHAR(50)    NOT NULL,
-    taux        DECIMAL(15, 2) NOT NULL,
-    duree       INT            NOT NULL,
-    modalite_id INT            NOT NULL,
-    FOREIGN KEY (modalite_id) REFERENCES modalite (id)
+    id      INT AUTO_INCREMENT PRIMARY KEY,
+    libelle VARCHAR(50)    NOT NULL,
+    taux    DECIMAL(15, 2) NOT NULL
 );
 
 CREATE TABLE paiements
@@ -102,6 +100,9 @@ CREATE TABLE pret
     id           INT AUTO_INCREMENT PRIMARY KEY,
     montant      DECIMAL(15, 2) NOT NULL,
     type_pret_id INT            NOT NULL,
+    modalite_id  INT            NOT NULL,
+    duree        INT            NOT NULL, -- en mois
+    FOREIGN KEY (modalite_id) REFERENCES modalite (id),
     FOREIGN KEY (type_pret_id) REFERENCES type_pret (id)
 );
 
