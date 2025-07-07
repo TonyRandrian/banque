@@ -24,7 +24,7 @@ class AppConfig
         return [
             [
                 'label' => 'Accueil',
-                'link' => '/banque/?page=accueil',
+                'link' => '/banque',
                 'icon' => '🏠',
                 'page' => 'accueil'
             ],
@@ -78,6 +78,8 @@ class AppConfig
             return 'fond';
         } elseif (isset($_GET['page'])) {
             return $_GET['page'];
+        } elseif ($path === '/banque/ws' || $path === '/banque' || $path === '' || $path === '/banque/index.php') {
+            return 'accueil';
         } else {
             return 'accueil';
         }

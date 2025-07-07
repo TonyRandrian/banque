@@ -510,6 +510,122 @@ table tr:hover {
     }
 }
 
+/* Page d'accueil - Welcome container */
+.welcome-container {
+    display: flex;
+    align-items: center;
+    min-height: calc(100vh - 40px);
+    padding: 20px;
+    gap: 40px;
+}
+
+.welcome-left {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.welcome-svg {
+    max-width: 100%;
+    height: auto;
+    filter: drop-shadow(0 10px 30px rgba(46, 90, 160, 0.2));
+}
+
+.welcome-right {
+    flex: 1;
+    padding: 20px;
+}
+
+.welcome-content {
+    max-width: 600px;
+}
+
+.welcome-title {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #1e3a8a;
+    margin-bottom: 20px;
+    line-height: 1.2;
+}
+
+.welcome-subtitle {
+    font-size: 1.25rem;
+    color: #6b7280;
+    margin-bottom: 40px;
+    line-height: 1.5;
+}
+
+.welcome-features {
+    margin-bottom: 40px;
+}
+
+.feature-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 25px;
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.feature-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.feature-icon {
+    font-size: 2rem;
+    margin-right: 20px;
+    flex-shrink: 0;
+}
+
+.feature-text h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1e3a8a;
+    margin-bottom: 8px;
+}
+
+.feature-text p {
+    color: #6b7280;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.welcome-actions {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.btn-lg {
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-block;
+    text-align: center;
+    min-width: 180px;
+}
+
+.btn-outline-primary {
+    background: transparent;
+    color: #2c5aa0;
+    border: 2px solid #2c5aa0;
+}
+
+.btn-outline-primary:hover {
+    background: #2c5aa0;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(44, 90, 160, 0.3);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .sidebar {
@@ -552,6 +668,34 @@ table tr:hover {
     .cta-buttons {
         flex-direction: column;
         align-items: center;
+    }
+    
+    .welcome-container {
+        flex-direction: column;
+        text-align: center;
+        padding: 20px 15px;
+        gap: 30px;
+    }
+    
+    .welcome-title {
+        font-size: 2.5rem;
+    }
+    
+    .welcome-subtitle {
+        font-size: 1.1rem;
+    }
+    
+    .welcome-actions {
+        justify-content: center;
+    }
+    
+    .btn-lg {
+        min-width: 200px;
+    }
+    
+    .welcome-svg {
+        width: 90%;
+        max-width: 400px;
     }
 }
 
