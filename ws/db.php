@@ -1,12 +1,13 @@
 <?php
 function getDB() {
     $host = 'localhost';
-    $dbname = 'tp_flight';
+    $dbname = 'banque';
     $username = 'root';
-    $password = 'root';
+    $port ="3307";
+    $password = 'rabe';
 
     try {
-        return new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password, [
+        return new PDO("mysql:host=$host;dbname=$dbname;port=$port;charset=utf8", $username, $password, [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
         ]);
     } catch (PDOException $e) {

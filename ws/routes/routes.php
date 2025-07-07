@@ -1,5 +1,3 @@
 <?php
-require_once __DIR__ . '/../controllers/FondController.php';
-
-Flight::route('POST /api/ajout/fond', ['FondController', 'create']);
-Flight::route('POST /api/')
+// Include all route files
+require_once __DIR__ . '/type_pret_routes.php';
