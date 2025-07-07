@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Gestion des prêts</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    input, button, select { margin: 5px; padding: 5px; }
+    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { background-color: #f2f2f2; }
+    nav { margin-bottom: 20px; }
+    nav a { margin-right: 10px; }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html">Gestion des étudiants</a> |
+    <a href="pret.html">Gestion des prêts</a> |
+    <a href="status_pret.html">Gestion des statuts de prêt</a>
+  </nav>
+
+  <h1>Gestion des prêts</h1>
+
+  <div>
+    <input type="hidden" id="id">
+    <input type="number" id="duree_remboursement" placeholder="Durée remboursement (mois)">
+    <input type="number" id="montant" placeholder="Montant" step="0.01">
+    <input type="date" id="date_demande" placeholder="Date de demande">
+    <select id="modalite_id">
+      <option value="">Sélectionnez une modalité</option>
+    </select>
+    <select id="type_pret_id">
+      <option value="">Sélectionnez un type de prêt</option>
+    </select>
+    <button onclick="ajouterOuModifier()">Ajouter / Modifier</button>
+  </div>
+
+  <table id="table-prets">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Durée remboursement</th>
+        <th>Montant</th>
+        <th>Date demande</th>
+        <th>Modalité</th>
+        <th>Type prêt</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    const apiBase = "http://localhost/banque/ws/index.php";
+
+    function ajax(method, url, data, callback) {
+      const xhr = new XMLHttpRequest();
+      xhr.open(method, apiBase + url, true);
+      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      xhr.onreadystatechange = () => {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          callback(JSON.parse(xhr.responseText));
+        }
+      };
+      xhr.send(data);
+    }
+
+    function chargerPrets() {
+      ajax("GET", "/prets", null, (data) => {
+        const tbody = document.querySelector("#table-prets tbody");
+        tbody.innerHTML = "";
+        data.forEach(e => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${e.id}</td>
+            <td>${e.duree_remboursement}</td>
+            <td>${e.montant}</td>
+            <td>${e.date_demande}</td>
+            <td>${e.modalite_libelle || e.modalite_id}</td>
+            <td>${e.type_pret_libelle || e.type_pret_id}</td>
+            <td>
+              <button onclick='remplirFormulaire(${JSON.stringify(e)})'>✏️</button>
+              <button onclick='supprimerPret(${e.id})'>🗑️</button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      });
+    }
+
+    function chargerModalitesPourSelect() {
+      ajax("GET", "/modalite", null, (data) => {
+        const select = document.getElementById("modalite_id");
+        select.innerHTML = '<option value="">Sélectionnez une modalité</option>';
+        data.forEach(m => {
+          const option = document.createElement("option");
+          option.value = m.id;
+          option.textContent = m.libelle ? `${m.libelle} (${m.nb_mois} mois)` : `#${m.id}`;
+          select.appendChild(option);
+        });
+      });
+    }
+
+    function chargerTypesPourSelect() {
+      ajax("GET", "/type_pret", null, (data) => {
+        const select = document.getElementById("type_pret_id");
+        select.innerHTML = '<option value="">Sélectionnez un type de prêt</option>';
+        data.forEach(t => {
+          const option = document.createElement("option");
+          option.value = t.id;
+          option.textContent = t.libelle ? `${t.libelle} (${t.taux}%)` : `#${t.id}`;
+          select.appendChild(option);
+        });
+      });
+    }
+
+    function ajouterOuModifier() {
+      const id = document.getElementById("id").value;
+      const duree_remboursement = document.getElementById("duree_remboursement").value;
+      const montant = document.getElementById("montant").value;
+      const date_demande = document.getElementById("date_demande").value;
+      const modalite_id = document.getElementById("modalite_id").value;
+      const type_pret_id = document.getElementById("type_pret_id").value;
+
+      const data = `duree_remboursement=${duree_remboursement}&montant=${montant}&date_demande=${date_demande}&modalite_id=${modalite_id}&type_pret_id=${type_pret_id}`;
+
+      if (id) {
+        ajax("PUT", `/prets/${id}`, data, () => {
+          resetForm();
+          chargerPrets();
+        });
+      } else {
+        ajax("POST", "/prets", data, () => {
+          resetForm();
+          chargerPrets();
+        });
+      }
+    }
+
+    function remplirFormulaire(e) {
+      document.getElementById("id").value = e.id;
+      document.getElementById("duree_remboursement").value = e.duree_remboursement;
+      document.getElementById("montant").value = e.montant;
+      document.getElementById("date_demande").value = e.date_demande;
+      document.getElementById("modalite_id").value = e.modalite_id;
+      document.getElementById("type_pret_id").value = e.type_pret_id;
+    }
+
+    function supprimerPret(id) {
+      if (confirm("Supprimer ce prêt ?")) {
+        ajax("DELETE", `/prets/${id}`, null, () => {
+          chargerPrets();
+        });
+      }
+    }
+
+    function resetForm() {
+      document.getElementById("id").value = "";
+      document.getElementById("duree_remboursement").value = "";
+      document.getElementById("montant").value = "";
+      document.getElementById("date_demande").value = "";
+      document.getElementById("modalite_id").value = "";
+      document.getElementById("type_pret_id").value = "";
+    }
+
+    chargerPrets();
+    chargerModalitesPourSelect();
+    chargerTypesPourSelect();
+  </script>
+</body>
+</html>

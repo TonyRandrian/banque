@@ -39,27 +39,28 @@ CREATE TABLE tresorerie
     PRIMARY KEY (id)
 );
 
-CREATE TABLE status_pret
-(
-    id           INT AUTO_INCREMENT,
-    date_status  DATE NOT NULL,
-    enum_pret_id INT  NOT NULL,
-    PRIMARY KEY (id),
-    FOREIGN KEY (enum_pret_id) REFERENCES enum_status_pret (id)
-);
-
 CREATE TABLE pret
 (
     id                  INT AUTO_INCREMENT,
     duree_remboursement DECIMAL(15, 2) NOT NULL,
     montant             DECIMAL(15, 2) NOT NULL,
-    date_demande        INT            NOT NULL,
+    date_demande        DATE            NOT NULL,
     modalite_id         INT            NOT NULL,
     type_pret_id        INT            NOT NULL,
-
     PRIMARY KEY (id),
     FOREIGN KEY (modalite_id) REFERENCES modalite (id),
     FOREIGN KEY (type_pret_id) REFERENCES type_pret (id)
+);
+
+CREATE TABLE status_pret
+(
+    id           INT AUTO_INCREMENT,
+    date_status  DATE NOT NULL,
+    enum_pret_id INT  NOT NULL,
+    pret_id INT  NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (enum_pret_id) REFERENCES enum_status_pret (id),
+    FOREIGN KEY (pret_id) REFERENCES pret (id)
 );
 
 CREATE TABLE paiement_modalite
