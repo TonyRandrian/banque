@@ -4,11 +4,6 @@
     <meta charset="UTF-8">
     <title>Tableau de bord des intérêts - Établissement Financier</title>
     <style>
-        body { 
-            font-family: Arial, sans-serif; 
-            padding: 20px; 
-            background-color: #f5f5f5; 
-        }
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -182,7 +177,12 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        const apiBase = "http://localhost/Web/S4/banque/ws";
+        // Point d'accès API centralisé
+        if (typeof window.apiBase === 'undefined') {
+            var apiBase = "http://localhost/Web/S4/banque/ws";
+        } else {
+            var apiBase = window.apiBase;
+        }
         let currentData = {};
         let chart = null;
 
@@ -350,6 +350,14 @@
             const [annee, moisNum] = mois.split('-');
             const moisNoms = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'];
             return `${moisNoms[parseInt(moisNum) - 1]} ${annee}`;
+        }
+
+        // Charger la config API globale si présente
+        if (typeof window.apiBase === 'undefined') {
+            var script = document.createElement('script');
+            script.src = '/Web/S4/banque/public/api-config.js';
+            script.onload = function() { window.onload && window.onload(); };
+            document.head.appendChild(script);
         }
 
         window.onload = function() {

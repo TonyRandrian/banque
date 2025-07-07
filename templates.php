@@ -1,6 +1,4 @@
 <?php
-// Les variables $pageTitle, $page, $sidebarItems sont envoyées par les routes via Flight::render()
-// Si elles ne sont pas définies (cas du index.php), on utilise AppConfig
 if (!isset($pageTitle)) {
     if (!class_exists('AppConfig')) {
         require_once 'ws/helpers/AppConfig.php';
@@ -23,22 +21,25 @@ if (!isset($activePage)) {
 ?>
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($pageTitle) ?></title>
     <link rel="stylesheet" href="<?= $cssPath ?>">
 </head>
+
 <body>
+    <script type="text/javascript" src="api-config.js"></script>
     <!-- Sidebar -->
     <nav class="sidebar">
         <div class="sidebar-header">
             <h3>🏦 Banque</h3>
         </div>
-        
+
         <ul class="list-unstyled components">
             <?php foreach ($sidebarItems as $item): ?>
-                <?php 
+                <?php
                 $isActive = isset($item['page']) && $item['page'] === $activePage;
                 $activeClass = $isActive ? ' active' : '';
                 ?>
@@ -49,7 +50,7 @@ if (!isset($activePage)) {
                 </li>
             <?php endforeach; ?>
         </ul>
-        
+
         <div class="sidebar-footer">
             <p>&copy; 2025 Système Bancaire</p>
         </div>
@@ -57,7 +58,7 @@ if (!isset($activePage)) {
 
     <!-- Main Content -->
     <div class="content">
-        <?php 
+        <?php
         if (isset($page) && !empty($page)) {
             // Chercher le fichier à la racine du projet
             $pageFile = __DIR__ . "/" . $page . ".php";
@@ -70,6 +71,9 @@ if (!isset($activePage)) {
             echo "<div class='alert alert-warning'>Aucune page spécifiée</div>";
         }
         ?>
+
     </div>
+
 </body>
+
 </html>

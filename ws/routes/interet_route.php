@@ -9,3 +9,16 @@ Flight::route('POST /api/interets/mois/@pret_id', ['PretController', 'getInteret
 
 // Route pour obtenir la liste des prêts acceptés (GET)
 Flight::route('GET /api/prets/acceptes', ['PretController', 'getPretsAcceptes']);
+
+Flight::route('GET /interets', function() {
+    $data = [
+        'pageTitle' => "Stats intérêts - Banque Moderne",
+        'page' => 'dashboard-interets',
+        'sidebarItems' => AppConfig::getSidebarItems(),
+        'cssPath' => AppConfig::getCssPath(),
+        'activePage' => 'dashboard-interets'
+    ];
+
+    extract($data);
+    include __DIR__ . '/../../templates.php';
+});

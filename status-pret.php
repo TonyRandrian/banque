@@ -32,23 +32,26 @@
         <h3>Liste des statuts de prêts</h3>
         <table id="table-status-prets">
             <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Date status</th>
-                    <th>Statut</th>
-                    <th>Prêt</th>
-                    <th>Actions</th>
-                </tr>
+            <tr>
+                <th>ID</th>
+                <th>Date status</th>
+                <th>Statut</th>
+                <th>Prêt</th>
+                <th>Actions</th>
+            </tr>
             </thead>
             <tbody>
-                <tr><td colspan="5">Chargement...</td></tr>
+            <tr>
+                <td colspan="5">Chargement...</td>
+            </tr>
             </tbody>
         </table>
     </div>
 </div>
 
+
 <script>
-    const apiBase = "http://localhost/banque/ws";
+    const apiBase = window.apiBase;
 
     function ajax(method, url, data, callback, errorCallback) {
         const xhr = new XMLHttpRequest();
@@ -85,7 +88,7 @@
         resultDiv.className = `alert alert-${type === 'error' ? 'danger' : 'success'}`;
         resultDiv.textContent = message;
         resultDiv.style.display = 'block';
-        
+
         // Masquer le message après 5 secondes
         setTimeout(() => {
             resultDiv.style.display = 'none';
@@ -96,21 +99,21 @@
         ajax("GET", "/status-prets", null, (data) => {
             const tbody = document.querySelector("#table-status-prets tbody");
             tbody.innerHTML = "";
-            
+
             if (!Array.isArray(data)) {
                 tbody.innerHTML = '<tr><td colspan="5">Erreur: Format de données invalide</td></tr>';
                 return;
             }
-            
+
             if (data.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="5">Aucun statut de prêt trouvé</td></tr>';
                 return;
             }
-            
+
             data.forEach(status => {
                 const tr = document.createElement("tr");
                 const dateFormatted = new Date(status.date_status).toLocaleDateString('fr-FR');
-                
+
                 tr.innerHTML = `
                     <td><strong>#${status.id}</strong></td>
                     <td>${dateFormatted}</td>
@@ -137,12 +140,15 @@
         ajax("GET", "/prets", null, (data) => {
             const select = document.getElementById("pret_id");
             select.innerHTML = '<option value="">Sélectionnez un prêt</option>';
-            
+
             if (Array.isArray(data)) {
                 data.forEach(pret => {
                     const option = document.createElement("option");
                     option.value = pret.id;
-                    const montant = parseFloat(pret.montant).toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' });
+                    const montant = parseFloat(pret.montant).toLocaleString('fr-FR', {
+                        style: 'currency',
+                        currency: 'EUR'
+                    });
                     option.textContent = `Prêt #${pret.id} - ${montant}`;
                     select.appendChild(option);
                 });
@@ -156,7 +162,7 @@
         ajax("GET", "/enum-status-prets", null, (data) => {
             const select = document.getElementById("enum_pret_id");
             select.innerHTML = '<option value="">Sélectionnez un statut</option>';
-            
+
             if (Array.isArray(data)) {
                 data.forEach(enumStatus => {
                     const option = document.createElement("option");
@@ -218,9 +224,9 @@
         document.getElementById("date_status").value = status.date_status;
         document.getElementById("enum_pret_id").value = status.enum_pret_id;
         document.getElementById("pret_id").value = status.pret_id;
-        
+
         // Faire défiler vers le formulaire
-        document.querySelector('.form-container').scrollIntoView({ behavior: 'smooth' });
+        document.querySelector('.form-container').scrollIntoView({behavior: 'smooth'});
     }
 
     function supprimerStatusPret(id) {
@@ -241,13 +247,13 @@
     }
 
     // Gestion du formulaire
-    document.getElementById('status-pret-form').addEventListener('submit', function(e) {
+    document.getElementById('status-pret-form').addEventListener('submit', function (e) {
         e.preventDefault();
         ajouterOuModifier();
     });
 
     // Chargement initial
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         chargerStatusPrets();
         chargerPretsPourSelect();
         chargerEnumsPourSelect();

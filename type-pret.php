@@ -45,7 +45,12 @@
 </div>
 
 <script>
-  const apiBase = "http://localhost/banque/ws";
+  // Point d'accès API centralisé
+  if (typeof window.apiBase === 'undefined') {
+    var apiBase = "http://localhost/banque/ws";
+  } else {
+    var apiBase = window.apiBase;
+  }
 
   function ajax(method, url, data, callback, errorCallback) {
     const xhr = new XMLHttpRequest();

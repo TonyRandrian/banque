@@ -1,7 +1,14 @@
 <?php
-class AppConfig 
+
+class AppConfig
 {
-    public static function getRoutes() 
+
+    public static function getBasePath()
+    {
+        return '/Web/S4/banque';
+    }
+
+    public static function getRoutes()
     {
         return [
             'accueil' => [
@@ -13,7 +20,7 @@ class AppConfig
                 'content' => 'type-pret'
             ],
             'fond' => [
-                'title' => 'Gestion des Fonds - Banque Moderne', 
+                'title' => 'Gestion des Fonds - Banque Moderne',
                 'content' => 'fond'
             ],
             'pret' => [
@@ -26,71 +33,74 @@ class AppConfig
             ]
         ];
     }
-    
-    public static function getSidebarItems() 
+
+    public static function getSidebarItems()
     {
+        $basePath = self::getBasePath();
+
         return [
             [
                 'label' => 'Accueil',
-                'link' => '/banque',
+                'link' => $basePath,
                 'icon' => '🏠',
                 'page' => 'accueil'
             ],
             [
                 'label' => 'Types de Prêts',
-                'link' => '/banque/ws/type-pret',
+                'link' => $basePath . '/ws/type-pret',
                 'icon' => '💰',
                 'page' => 'type-pret'
             ],
             [
                 'label' => 'Gestion des Fonds',
-                'link' => '/banque/ws/fond',
+                'link' => $basePath . '/ws/fond',
                 'icon' => '📊',
                 'page' => 'fond'
             ],
             [
                 'label' => 'Prêts',
-                'link' => '/banque/ws/pret',
+                'link' => $basePath . '/ws/pret',
                 'icon' => '🏦',
                 'page' => 'pret'
             ],
             [
                 'label' => 'Statuts de Prêts',
-                'link' => '/banque/ws/status-pret',
+                'link' => $basePath . '/ws/status-pret',
                 'icon' => '📋',
                 'page' => 'status-pret'
+            ],
+            [
+                'label' => 'Intérêts',
+                'link' => $basePath . '/ws/interets',
+                'icon' => '💰',
+                'page' => 'dashboard-interets'
             ]
         ];
     }
-    
-    public static function getCurrentPage() 
+
+    public static function getCurrentPage()
     {
-        return $_GET['page'] ?? 'accueil';
+        return isset($_GET['page']) ? $_GET['page'] : 'accueil';
     }
-    
-    public static function getPageConfig($page) 
+
+    public static function getPageConfig($page)
     {
         $routes = self::getRoutes();
-        return $routes[$page] ?? $routes['accueil'];
+        return isset($routes[$page]) ? $routes[$page] : $routes['accueil'];
     }
-    
-    public static function getCssPath() 
+
+    public static function getCssPath()
     {
-        $baseDir = '/banque';
+        $baseDir = self::getBasePath();
         return $baseDir . '/assets/css/style.css';
     }
-    
-    public static function getBasePath() 
+
+    public static function getActivePage()
     {
-        return '/banque'; 
-    }
- 
-    public static function getActivePage() 
-    {
-        $uri = $_SERVER['REQUEST_URI'] ?? '';
+        $uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
         $path = parse_url($uri, PHP_URL_PATH);
         $path = rtrim($path, '/');
-        
+
         // Détection de la page active
         if (strpos($path, '/type-pret') !== false) {
             return 'type-pret';
