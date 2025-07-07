@@ -99,7 +99,7 @@ CREATE TABLE status_pret
 CREATE TABLE pret
 (
     id                  INT AUTO_INCREMENT,
-    duree_remboursement DECIMAL(15, 2) NOT NULL,
+    duree_remboursement INT            NOT NULL,
     montant             DECIMAL(15, 2) NOT NULL,
     date_demande        INT            NOT NULL,
     modalite_id         INT            NOT NULL,

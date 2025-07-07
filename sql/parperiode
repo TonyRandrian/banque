@@ -1,0 +1,62 @@
+/**
+* Retourne les intérêts par mois pour un prêt donné (par id).
+* @param int $pret_id
+* @return array [ 'YYYY-MM' => montant_interets, ... ]
+*/
+public static function getInteretsParMoisPourPret($pret_id)
+{
+$db = getDB();
+// On récupère la date d'acceptation du prêt
+$stmt = $db->prepare("
+SELECT MIN(date_status) AS date_acceptation
+FROM status_pret
+WHERE pret_id = ? AND enum_pret_id = 2
+");
+$stmt->execute([$pret_id]);
+$row = $stmt->fetch(PDO::FETCH_ASSOC);
+$date_acceptation = $row && $row['date_acceptation'] ? $row['date_acceptation'] : null;
+if (!$date_acceptation) return [];
+
+// On récupère les paiements prévus pour ce prêt, après acceptation
+$stmt = $db->prepare("
+SELECT date_prevu_paiment, interet
+FROM paiement_modalite
+WHERE pret_id = ? AND date_prevu_paiment >= ?
+");
+$stmt->execute([$pret_id, $date_acceptation]);
+$paiements = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$result = [];
+foreach ($paiements as $paiement) {
+$mois = date('Y-m', strtotime($paiement['date_prevu_paiment']));
+if (!isset($result[$mois])) $result[$mois] = 0;
+$result[$mois] += floatval($paiement['interet']);
+}
+foreach ($result as $mois => $val) {
+$result[$mois] = round($val, 2);
+}
+ksort($result);
+return $result;
+}
+
+/**
+* Retourne les intérêts par mois pour tous les prêts acceptés, indexé par id de prêt.
+* @return array [ pret_id => [ 'YYYY-MM' => montant_interets, ... ], ... ]
+*/
+public static function getInteretsParMoisPourTousPrets()
+{
+$db = getDB();
+// On récupère tous les prêts acceptés
+$sql = "
+SELECT DISTINCT p.id
+FROM pret p
+JOIN status_pret sp ON sp.pret_id = p.id AND sp.enum_pret_id = 2
+";
+$prets = $db->query($sql)->fetchAll(PDO::FETCH_COLUMN);
+
+$result = [];
+foreach ($prets as $pret_id) {
+$result[$pret_id] = self::getInteretsParMoisPourPret($pret_id);
+}
+return $result;
+}

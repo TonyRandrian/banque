@@ -1,0 +1,10 @@
+SET FOREIGN_KEY_CHECKS = 0;
+TRUNCATE TABLE paiement_modalite;
+TRUNCATE TABLE status_pret;
+TRUNCATE TABLE pret;
+TRUNCATE TABLE tresorerie;
+TRUNCATE TABLE config;
+TRUNCATE TABLE modalite;
+TRUNCATE TABLE type_pret;
+TRUNCATE TABLE enum_status_pret;
+SET FOREIGN_KEY_CHECKS = 1;
