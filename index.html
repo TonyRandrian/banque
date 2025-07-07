@@ -9,9 +9,12 @@
     table { border-collapse: collapse; width: 100%; margin-top: 20px; }
     th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
     th { background-color: #f2f2f2; }
+    .nav-btn { margin-bottom: 20px; }
   </style>
 </head>
 <body>
+
+  <button class="nav-btn" id="goto-fond">Aller à la gestion des fonds</button>
 
   <h1>Gestion des étudiants</h1>
 
@@ -115,6 +118,10 @@
       document.getElementById("email").value = "";
       document.getElementById("age").value = "";
     }
+
+    document.getElementById('goto-fond').onclick = function() {
+      window.location.href = 'fond.html';
+    };
 
     chargerEtudiants();
   </script>
