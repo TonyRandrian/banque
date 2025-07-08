@@ -3,7 +3,9 @@ require_once __DIR__ . '/../controllers/PretController.php';
 require_once __DIR__ . '/../helpers/AppConfig.php';
 
 Flight::route('GET /prets', ['PretController', 'getAll']);
+Flight::route('GET /prets/valide', ['PretController', 'getValide']);
 Flight::route('GET /prets/@id', ['PretController', 'getById']);
+Flight::route('GET /prets/@id/export-pdf', ['PretController', 'exportPDF']);
 Flight::route('POST /prets', ['PretController', 'create']);
 Flight::route('PUT /prets/@id', ['PretController', 'update']);
 Flight::route('DELETE /prets/@id', ['PretController', 'delete']);

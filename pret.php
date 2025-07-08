@@ -64,6 +64,29 @@
             </tbody>
         </table>
     </div>
+
+    <div class="table-container">
+        <h3>Prêts avec Échéancier Complet</h3>
+        <p class="page-description">Prêts acceptés avec échéancier de paiements généré</p>
+        <table id="table-prets-avec-echeancier">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Durée remboursement</th>
+                    <th>Montant</th>
+                    <th>Date demande</th>
+                    <th>Date validation</th>
+                    <th>Modalité</th>
+                    <th>Type prêt</th>
+                    <th>Nb Paiements</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td colspan="9">Chargement...</td></tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <script>
@@ -218,6 +241,64 @@
         });
     }
 
+    function chargerPretsAvecEcheancier() {
+        ajax("GET", "/prets/valide", null, (data) => {
+            const tbody = document.querySelector("#table-prets-avec-echeancier tbody");
+            tbody.innerHTML = "";
+            
+            if (!Array.isArray(data)) {
+                tbody.innerHTML = '<tr><td colspan="9">Erreur: Format de données invalide</td></tr>';
+                return;
+            }
+            
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="9">Aucun prêt avec échéancier trouvé</td></tr>';
+                return;
+            }
+            
+            data.forEach(pret => {
+                const tr = document.createElement("tr");
+                const dateDemandeFormatted = new Date(pret.date_demande).toLocaleDateString('fr-FR');
+                const dateValidationFormatted = new Date(pret.date_status).toLocaleDateString('fr-FR');
+                const montantFormatted = parseFloat(pret.montant).toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' });
+                
+                tr.innerHTML = `
+                    <td><strong>#${pret.id}</strong></td>
+                    <td><span class="badge badge-info">${pret.duree_remboursement} mois</span></td>
+                    <td><strong>${montantFormatted}</strong></td>
+                    <td>${dateDemandeFormatted}</td>
+                    <td>${dateValidationFormatted}</td>
+                    <td><span class="badge badge-secondary">${pret.modalite_libelle || '#' + pret.modalite_id}</span></td>
+                    <td><span class="badge badge-primary">${pret.type_pret_libelle || '#' + pret.type_pret_id}</span></td>
+                    <td><span class="badge badge-success">${pret.nb_paiements || 0} paiements</span></td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" onclick='exporterPDF(${pret.id})'>
+                            📄 Export PDF
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }, (error) => {
+            const tbody = document.querySelector("#table-prets-avec-echeancier tbody");
+            tbody.innerHTML = `<tr><td colspan="9">Erreur: ${error}</td></tr>`;
+        });
+    }
+
+    function exporterPDF(pretId) {
+        // Appel à l'API pour récupérer les données du prêt et déclencher l'export
+        ajax("GET", `/prets/${pretId}/export-pdf`, null, (response) => {
+            // Pour l'instant, on affiche les données récupérées
+            console.log('Données du prêt pour export PDF:', response);
+            alert(`Export PDF pour le prêt #${pretId}\n${response.message}\nNombre de paiements: ${response.paiements?.length || 0}`);
+            
+            // Plus tard, on pourra ouvrir une nouvelle fenêtre avec le PDF généré
+            // window.open(`${apiBase}/prets/${pretId}/export-pdf`, '_blank');
+        }, (error) => {
+            alert(`Erreur lors de l'export PDF: ${error}`);
+        });
+    }
+
     function ajouterOuModifier() {
         const id = document.getElementById("id").value;
         const duree_remboursement = document.getElementById("duree_remboursement").value;
@@ -267,6 +348,7 @@
                 showMessage(response.message || 'Prêt modifié avec succès', 'success');
                 resetForm();
                 chargerPrets();
+                chargerPretsAvecEcheancier();
             }, (error) => {
                 showMessage("Erreur lors de la modification: " + error, 'error');
             });
@@ -275,6 +357,7 @@
                 showMessage(response.message || 'Prêt ajouté avec succès', 'success');
                 resetForm();
                 chargerPrets();
+                chargerPretsAvecEcheancier();
             }, (error) => {
                 showMessage("Erreur lors de l'ajout: " + error, 'error');
             });
@@ -301,6 +384,7 @@
             ajax("DELETE", `/prets/${id}`, null, (response) => {
                 showMessage(response.message || 'Prêt supprimé avec succès', 'success');
                 chargerPrets();
+                chargerPretsAvecEcheancier();
             }, (error) => {
                 showMessage("Erreur lors de la suppression: " + error, 'error');
             });
@@ -321,6 +405,7 @@
 
     // Chargement initial
     chargerPrets();
+    chargerPretsAvecEcheancier();
     chargerModalitesPourSelect();
     chargerTypesPourSelect();
     chargerComptesClientsPourSelect();

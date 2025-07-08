@@ -14,6 +14,35 @@ class Pret
         return $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public static function allWithRelationsValid()
+    {
+        $db = getDB();
+        $sql = "SELECT p.*, m.libelle AS modalite_libelle, t.libelle AS type_pret_libelle, 
+                       cc.numero AS compte_client_numero, esp.libelle AS status_libelle,
+                       s.date_status, COUNT(pm.id) as nb_paiements
+                FROM pret p
+                JOIN modalite m ON p.modalite_id = m.id
+                JOIN type_pret t ON p.type_pret_id = t.id
+                JOIN compte_client cc ON p.compte_client_id = cc.id
+                JOIN (
+                    SELECT pret_id, MAX(date_status) as max_date_status
+                    FROM status_pret sp
+                    JOIN enum_status_pret esp ON sp.enum_pret_id = esp.id
+                    WHERE esp.libelle = 'accepté'
+                    GROUP BY pret_id
+                ) latest_status ON p.id = latest_status.pret_id
+                JOIN status_pret s ON p.id = s.pret_id AND s.date_status = latest_status.max_date_status
+                JOIN enum_status_pret esp ON s.enum_pret_id = esp.id
+                JOIN paiement_modalite pm ON p.id = pm.pret_id
+                WHERE esp.libelle = 'accepté'
+                GROUP BY p.id, p.duree_remboursement, p.montant, p.date_demande, p.modalite_id, 
+                         p.compte_client_id, p.type_pret_id, p.taux_assurance, p.assurance_par_mois,
+                         m.libelle, t.libelle, cc.numero, esp.libelle, s.date_status
+                HAVING COUNT(pm.id) > 0
+                ORDER BY s.date_status DESC";
+        return $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public static function findWithRelations($id)
     {
         $db = getDB();

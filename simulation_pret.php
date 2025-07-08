@@ -222,6 +222,7 @@
             datePaiement.setMonth(datePaiement.getMonth() + delaiDebutRemboursement);
         else
             datePaiement.setMonth(datePaiement.getMonth() + 1); // Première échéance le mois suivant
+
         // Calcul de l'assurance
         let assuranceTotal = montant * tauxAssurance / 100;
         let assuranceMensuelle = assuranceParMois ? (assuranceTotal / duree) : 0;
@@ -300,10 +301,12 @@
 
     document.getElementById('valider-simulation').onclick = function () {
         const compte_client_id = document.getElementById("compte_client_select").value;
+
         if (!compte_client_id) {
             showMessage("Veuillez choisir un compte client.", "error");
             return;
         }
+
         // Récupérer les infos du formulaire
         const montant = parseFloat(document.getElementById("montant").value);
         const duree = parseInt(document.getElementById("duree_remboursement").value, 10);
