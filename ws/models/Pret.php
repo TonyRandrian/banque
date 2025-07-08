@@ -46,11 +46,17 @@ class Pret
     public static function findWithRelations($id)
     {
         $db = getDB();
-        $stmt = $db->prepare("SELECT p.*, m.libelle AS modalite_libelle, t.libelle AS type_pret_libelle, cc.numero AS compte_client_numero
+        $stmt = $db->prepare("SELECT p.*, 
+                                     m.libelle AS modalite_libelle, 
+                                     t.libelle AS type_pret_libelle, 
+                                     cc.numero AS compte_numero,
+                                     c.nom AS client_nom,
+                                     c.prenom AS client_prenom
                               FROM pret p
                               JOIN modalite m ON p.modalite_id = m.id
                               JOIN type_pret t ON p.type_pret_id = t.id
                               JOIN compte_client cc ON p.compte_client_id = cc.id
+                              JOIN client c ON cc.client_id = c.id
                               WHERE p.id = ?");
         $stmt->execute([$id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);

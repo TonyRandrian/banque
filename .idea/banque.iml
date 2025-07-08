@@ -2,10 +2,15 @@
 <module type="WEB_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/ws/spec" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/ws/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/ws/vendor/mikecao/flight" />
       <excludeFolder url="file://$MODULE_DIR$/tp-flightphp-crud-MVC/tp-flightphp-crud/ws/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/tp-flightphp-crud-MVC/tp-flightphp-crud/ws/vendor/mikecao/flight" />
+      <excludeFolder url="file://$MODULE_DIR$/ws/vendor/fpdf/doc" />
+      <excludeFolder url="file://$MODULE_DIR$/ws/vendor/fpdf/font" />
+      <excludeFolder url="file://$MODULE_DIR$/ws/vendor/fpdf/makefont" />
+      <excludeFolder url="file://$MODULE_DIR$/ws/vendor/fpdf/tutorial" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

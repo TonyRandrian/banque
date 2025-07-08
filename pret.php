@@ -90,13 +90,6 @@
 </div>
 
 <script>
-    // Point d'accès API centralisé
-    if (typeof window.apiBase === 'undefined') {
-        var apiBase = "http://localhost/banque/ws";
-    } else {
-        var apiBase = window.apiBase;
-    }
-
     function ajax(method, url, data, callback, errorCallback) {
         const xhr = new XMLHttpRequest();
         xhr.open(method, apiBase + url, true);
@@ -286,17 +279,16 @@
     }
 
     function exporterPDF(pretId) {
-        // Appel à l'API pour récupérer les données du prêt et déclencher l'export
-        ajax("GET", `/prets/${pretId}/export-pdf`, null, (response) => {
-            // Pour l'instant, on affiche les données récupérées
-            console.log('Données du prêt pour export PDF:', response);
-            alert(`Export PDF pour le prêt #${pretId}\n${response.message}\nNombre de paiements: ${response.paiements?.length || 0}`);
-            
-            // Plus tard, on pourra ouvrir une nouvelle fenêtre avec le PDF généré
-            // window.open(`${apiBase}/prets/${pretId}/export-pdf`, '_blank');
-        }, (error) => {
-            alert(`Erreur lors de l'export PDF: ${error}`);
-        });
+        // Déclenche le téléchargement du PDF généré par l'API
+        const url = `${apiBase}/prets/${pretId}/export-pdf`;
+        // Utilisation d'un lien temporaire pour forcer le téléchargement
+        const link = document.createElement('a');
+        link.href = url;
+        link.target = '_blank';
+        link.download = `pret_${pretId}.pdf`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     }
 
     function ajouterOuModifier() {

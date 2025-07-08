@@ -236,16 +236,18 @@ class PretController
                 return;
             }
 
-            // Pour l'instant, on retourne juste les données
-            // Plus tard, on pourra implémenter la génération PDF avec une bibliothèque comme TCPDF
             require_once __DIR__ . '/../models/PaiementModalite.php';
+            require_once __DIR__ . '/../services/PretPDF.php';
             $paiements = PaiementModalite::getByPret($id);
-            
-            Flight::json([
-                'pret' => $pret,
-                'paiements' => $paiements,
-                'message' => 'Données du prêt récupérées. Export PDF à implémenter.'
-            ]);
+
+            $pdfData = PretPDF::genererPDF($pret, $paiements);
+
+            // Envoyer le PDF avec les bons headers
+            header('Content-Type: application/pdf');
+            header('Content-Disposition: attachment; filename="pret_' . $id . '.pdf"');
+            header('Content-Length: ' . strlen($pdfData));
+            echo $pdfData;
+            exit;
         } catch (Exception $e) {
             Flight::json(['error' => $e->getMessage()], 500);
         }
