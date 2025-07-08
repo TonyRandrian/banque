@@ -202,7 +202,7 @@
     }
 
     function chargerComptesClientsPourSelect() {
-        ajax("GET", "/comptes-clients", null, (data) => {
+        ajax("GET", "/compte-clients", null, (data) => {
             const select = document.getElementById("compte_client_id");
             select.innerHTML = '<option value="">Sélectionnez un client</option>';
             if (Array.isArray(data)) {

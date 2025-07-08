@@ -3,17 +3,17 @@ insert into type_pret(libelle, taux)
 values ('type 1', 144.0),
        ('type 2', 8.00);
 
--- Modalités
+-- Modalites
 insert into modalite(libelle, nb_mois)
 values ('Mensuel', 1);
 
 -- Statuts prêt
 insert into enum_status_pret(libelle)
 values ('en attente'),
-       ('accepté'),
-       ('refusé'),
+       ('accepte'),
+       ('refuse'),
        ('en cours de traitement'),
-       ('terminé');
+       ('termine');
 
 -- Clients de test
 insert into client(email, prenom, nom, mdp)
@@ -30,12 +30,12 @@ insert into pret(duree_remboursement, montant, date_demande, modalite_id, type_p
 values (12, 6000, '2024-01-10', 1, 1, 1),
        (24, 48000, '2024-02-01', 1, 2, 2);
 
--- Statuts des prêts (acceptés)
+-- Statuts des prêts (acceptes)
 insert into status_pret(date_status, enum_pret_id, pret_id)
 values ('2024-01-15', 2, 1),
        ('2024-02-10', 2, 2);
 
--- 12 échéances mensuelles pour le prêt 1 (déjà présentes)
+-- 12 echeances mensuelles pour le prêt 1 (dejà presentes)
 insert into paiement_modalite(date_prevu_paiment, montant_prevu, interet, amortissement, pret_id)
 values ('2024-02-10', 968.62, 720, 248.62, 1),
        ('2024-03-10', 968.62, 690.17, 278.45, 1),
@@ -50,7 +50,7 @@ values ('2024-02-10', 968.62, 720, 248.62, 1),
        ('2024-12-10', 968.62, 205.30, 763.32, 1),
        ('2025-01-10', 968.62, 113.70, 854.92, 1);
 
--- 24 échéances mensuelles pour le prêt 2 (calculées pour 48000€, 8% annuel, 24 mois)
+-- 24 echeances mensuelles pour le prêt 2 (calculees pour 48000€, 8% annuel, 24 mois)
 insert into paiement_modalite(date_prevu_paiment, montant_prevu, interet, amortissement, pret_id)
 values ('2024-03-01', 2172.57, 320.00, 1852.57, 2),
        ('2024-04-01', 2172.57, 307.65, 1864.92, 2),
@@ -78,11 +78,16 @@ values ('2024-03-01', 2172.57, 320.00, 1852.57, 2),
        ('2026-02-01', 2172.57, 14.72, 2157.85, 2),
        ('2026-03-01', 2172.57, 0.47, 2172.10, 2);
 
--- Employés pour les tests
+
+drop database banque;
+create database banque;
+use banque;
+
+-- Employes pour les tests
 insert into employe(nom, prenom, email, mdp)
 values ("Dupont", "Jean", "jean.dupont@banque.fr", "$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi"),
        ("Martin", "Marie", "marie.martin@banque.fr", "$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi");
--- Jeu de données pour tester la simulation de prêt
+-- Jeu de donnees pour tester la simulation de prêt
 
 -- Clients
 INSERT INTO client (email, prenom, mdp, nom)
@@ -100,12 +105,12 @@ VALUES ('Pret Habitat', 2.50, 0),
        ('Pret Auto', 3.20, 2),
        ('Pret Perso', 4.00, 1);
 
--- Modalités
+-- Modalites
 INSERT INTO modalite (libelle, nb_mois)
 VALUES ('Annuelle', 12);
 
 -- Enum status prêt
 INSERT INTO enum_status_pret (libelle)
 VALUES ('En attente'),
-       ('Accepté'),
-       ('Refusé');
+       ('Accepte'),
+       ('Refuse');

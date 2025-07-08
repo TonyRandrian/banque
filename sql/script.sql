@@ -114,7 +114,7 @@ CREATE TABLE pret
     id                  INT AUTO_INCREMENT,
     duree_remboursement INT            NOT NULL,
     montant             DECIMAL(15, 2) NOT NULL,
-    date_demande        INT            NOT NULL,
+    date_demande        DATE            NOT NULL,
     modalite_id         INT            NOT NULL,
     employees_id        INT            NOT NULL,
     compte_client_id    INT            NOT NULL,

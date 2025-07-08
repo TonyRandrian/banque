@@ -57,11 +57,19 @@ class PretController
 
             $result = PretService::create($data);
 
-            // Ajout du status "Accepté" pour ce prêt via le modèle StatusPret
-            if (isset($result['id'])) {
-                $pret_id = $result['id'];
+            // Debug : log le résultat pour vérifier la structure
+            error_log("Résultat de PretService::create : " . print_r($result, true));
+            $result = (array)$result;
 
-                $enumStmt = $db->prepare("SELECT id FROM enum_status_pret WHERE libelle = 'Accepté' LIMIT 1");
+            // Ajout du status "Accepté" pour ce prêt via le modèle StatusPret
+            // Correction : $result peut être un tableau associatif ou un objet, ou l'id peut être sous une autre clé
+            if (
+                (is_array($result) && isset($result['id']) && $result['id']) ||
+                (is_object($result) && isset($result->id) && $result->id)
+            ) {
+                $pret_id = is_array($result) ? $result['id'] : $result->id;
+
+                $enumStmt = $db->prepare("SELECT id FROM enum_status_pret WHERE libelle = 'Accepte' LIMIT 1");
                 $enumStmt->execute();
                 $enum = $enumStmt->fetch(PDO::FETCH_ASSOC);
                 $enum_id = $enum ? $enum['id'] : null;
@@ -72,6 +80,8 @@ class PretController
                         'pret_id' => $pret_id
                     ]);
                 }
+            } else {
+                error_log("Aucun id trouvé dans le résultat de PretService::create !");
             }
 
             Flight::json(['message' => 'Prêt ajouté avec succès', 'data' => $result]);

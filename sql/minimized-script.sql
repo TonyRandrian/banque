@@ -92,9 +92,13 @@ CREATE TABLE paiement_modalite
     id                 INT AUTO_INCREMENT,
     date_prevu_paiment DATE           NOT NULL,
     montant_prevu      DECIMAL(15, 2) NOT NULL,
+    mensualite         DECIMAL(15, 2) NOT NULL,
     interet            DECIMAL(15, 2) NOT NULL,
     amortissement      DECIMAL(15, 2) NOT NULL,
+    assurance          DECIMAL(15, 2) NOT NULL,
+    montant_restant    DECIMAL(15, 2) NOT NULL,
     pret_id            INT            NOT NULL,
+
     PRIMARY KEY (id),
     FOREIGN KEY (pret_id) REFERENCES pret (id)
 );

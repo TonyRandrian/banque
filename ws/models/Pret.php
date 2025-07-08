@@ -42,7 +42,12 @@ class Pret
             $data['assurance_par_mois'] ?? 0,
             $data['compte_client_id']
         ]);
-        return ['id' => $db->lastInsertId()];
+        $id = $db->lastInsertId();
+        // Retourner l'objet inséré
+        $stmt = $db->prepare("SELECT * FROM pret WHERE id = ?");
+        $stmt->execute([$id]);
+        $pret = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $pret;
     }
 
     public static function update($id, $data)
