@@ -7,4 +7,12 @@ class Modalite {
         $sql = "SELECT * FROM modalite";
         return $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public static function findByLibelle($libelle) {
+        $db = getDB();
+        $sql = "SELECT * FROM modalite where libelle = :libelle";
+        $stmt = $db->prepare($sql);
+        $stmt->execute(['libelle' => $libelle]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }

@@ -13,7 +13,6 @@
                 <input type="number" id="taux" placeholder="Taux (%)" step="0.01" min="0" max="100" required>
             </div>
             <div class="form-row">
-                <input type="number" id="taux_assurance" placeholder="Taux assurance (%)" step="0.01" min="0" max="100">
                 <input type="number" id="delai_debut_remboursement" placeholder="Délai début remboursement (mois)" min="0" max="120">
             </div>
             <div class="form-actions">
@@ -32,7 +31,6 @@
                 <tr>
                     <th>Libellé</th>
                     <th>Taux (%)</th>
-                    <th>Taux Assurance (%)</th>
                     <th>Délai début remboursement (mois)</th>
                     <th>Actions</th>
                 </tr>
@@ -100,12 +98,12 @@
       tbody.innerHTML = "";
       
       if (!Array.isArray(data)) {
-        tbody.innerHTML = '<tr><td colspan="5">Erreur: Format de données invalide</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="4">Erreur: Format de données invalide</td></tr>';
         return;
       }
       
       if (data.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5">Aucun type de prêt trouvé</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="4">Aucun type de prêt trouvé</td></tr>';
         return;
       }
       
@@ -114,7 +112,6 @@
         tr.innerHTML = `
           <td><strong>${typePret.libelle}</strong></td>
           <td><span class="badge badge-primary">${parseFloat(typePret.taux).toFixed(2)}%</span></td>
-          <td><span class="badge badge-secondary">${parseFloat(typePret.taux_assurance || 0).toFixed(2)}%</span></td>
           <td><span class="badge badge-info">${parseInt(typePret.delai_debut_remboursement || 0)} mois</span></td>
           <td>
             <button class="btn btn-outline btn-sm" onclick='remplirFormulaire(${JSON.stringify(typePret)})'>
@@ -129,7 +126,7 @@
       });
     }, (error) => {
       const tbody = document.querySelector("#table-type-prets tbody");
-      tbody.innerHTML = `<tr><td colspan="5">Erreur: ${error}</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="4">Erreur: ${error}</td></tr>`;
     });
   }
 
@@ -137,7 +134,6 @@
     const id = document.getElementById("id").value;
     const libelle = document.getElementById("libelle").value.trim();
     const taux = document.getElementById("taux").value;
-    const taux_assurance = document.getElementById("taux_assurance").value || 0;
     const delai_debut_remboursement = document.getElementById("delai_debut_remboursement").value || 0;
 
     // Validation
@@ -156,17 +152,12 @@
       return;
     }
 
-    if (parseFloat(taux_assurance) < 0 || parseFloat(taux_assurance) > 100) {
-      showMessage("Le taux d'assurance doit être compris entre 0 et 100%", 'error');
-      return;
-    }
-
     if (parseInt(delai_debut_remboursement) < 0 || parseInt(delai_debut_remboursement) > 120) {
       showMessage("Le délai de début de remboursement doit être compris entre 0 et 120 mois", 'error');
       return;
     }
 
-    const data = `libelle=${encodeURIComponent(libelle)}&taux=${taux}&taux_assurance=${taux_assurance}&delai_debut_remboursement=${delai_debut_remboursement}`;
+    const data = `libelle=${encodeURIComponent(libelle)}&taux=${taux}&delai_debut_remboursement=${delai_debut_remboursement}`;
 
     if (id) {
       ajax("PUT", `/type-prets/${id}`, data, (response) => {
@@ -191,7 +182,6 @@
     document.getElementById("id").value = typePret.id;
     document.getElementById("libelle").value = typePret.libelle;
     document.getElementById("taux").value = typePret.taux;
-    document.getElementById("taux_assurance").value = typePret.taux_assurance || 0;
     document.getElementById("delai_debut_remboursement").value = typePret.delai_debut_remboursement || 0;
     
     // Faire défiler vers le formulaire

@@ -9,18 +9,31 @@
         <form id="pret-form">
             <input type="hidden" id="id">
             <div class="form-row">
-                <input type="number" id="duree_remboursement" placeholder="Durée remboursement (mois)" min="1" max="360" required>
                 <input type="number" id="montant" placeholder="Montant (€)" step="0.01" min="1" required>
+                <input type="number" id="duree_remboursement" placeholder="Durée remboursement (mois)" min="1" max="360" required>
             </div>
-            <div class="form-row">
+            <!-- <div class="form-row">
                 <input type="date" id="date_demande" required>
                 <select id="modalite_id" required>
                     <option value="">Sélectionnez une modalité</option>
                 </select>
-            </div>
+            </div> -->
             <div class="form-row">
                 <select id="type_pret_id" required>
                     <option value="">Sélectionnez un type de prêt</option>
+                </select>
+            </div>
+            <div class="form-row">
+                <input type="number" id="taux_assurance" placeholder="Taux assurance (%)" step="0.01" min="0" max="100">
+            </div>
+            <div class="form-row">
+                <label for="assurance_par_mois">
+                    <input type="checkbox" id="assurance_par_mois" value="1"> Assurance par mois
+                </label>
+            </div>
+            <div class="form-row">
+                <select id="compte_client_id" required>
+                    <option value="">Sélectionnez un client</option>
                 </select>
             </div>
             <div class="form-actions">
@@ -148,7 +161,7 @@
         });
     }
 
-    function chargerModalitesPourSelect() {
+    /*function chargerModalitesPourSelect() {
         ajax("GET", "/modalites", null, (data) => {
             const select = document.getElementById("modalite_id");
             select.innerHTML = '<option value="">Sélectionnez une modalité</option>';
@@ -166,7 +179,7 @@
         }, (error) => {
             console.error('Erreur lors du chargement des modalités:', error);
         });
-    }
+    }*/
 
     function chargerTypesPourSelect() {
         ajax("GET", "/type-prets", null, (data) => {
@@ -188,6 +201,23 @@
         });
     }
 
+    function chargerComptesClientsPourSelect() {
+        ajax("GET", "/comptes-clients", null, (data) => {
+            const select = document.getElementById("compte_client_id");
+            select.innerHTML = '<option value="">Sélectionnez un client</option>';
+            if (Array.isArray(data)) {
+                data.forEach(client => {
+                    const option = document.createElement("option");
+                    option.value = client.id;
+                    option.textContent = client.numero ? client.numero : `Client #${client.id}`;
+                    select.appendChild(option);
+                });
+            }
+        }, (error) => {
+            console.error('Erreur lors du chargement des comptes clients:', error);
+        });
+    }
+
     function ajouterOuModifier() {
         const id = document.getElementById("id").value;
         const duree_remboursement = document.getElementById("duree_remboursement").value;
@@ -195,6 +225,9 @@
         const date_demande = document.getElementById("date_demande").value;
         const modalite_id = document.getElementById("modalite_id").value;
         const type_pret_id = document.getElementById("type_pret_id").value;
+        const taux_assurance = document.getElementById("taux_assurance").value || 0;
+        const assurance_par_mois = document.getElementById("assurance_par_mois").checked ? 1 : 0;
+        const compte_client_id = document.getElementById("compte_client_id").value;
 
         // Validation
         if (!duree_remboursement || parseInt(duree_remboursement) <= 0) {
@@ -222,7 +255,12 @@
             return;
         }
 
-        const data = `duree_remboursement=${duree_remboursement}&montant=${montant}&date_demande=${date_demande}&modalite_id=${modalite_id}&type_pret_id=${type_pret_id}`;
+        if (!compte_client_id) {
+            showMessage("Veuillez sélectionner un client", 'error');
+            return;
+        }
+
+        const data = `duree_remboursement=${duree_remboursement}&montant=${montant}&date_demande=${date_demande}&modalite_id=${modalite_id}&type_pret_id=${type_pret_id}&taux_assurance=${taux_assurance}&assurance_par_mois=${assurance_par_mois}&compte_client_id=${compte_client_id}`;
 
         if (id) {
             ajax("PUT", `/prets/${id}`, data, (response) => {
@@ -250,6 +288,9 @@
         document.getElementById("date_demande").value = pret.date_demande;
         document.getElementById("modalite_id").value = pret.modalite_id;
         document.getElementById("type_pret_id").value = pret.type_pret_id;
+        document.getElementById("taux_assurance").value = pret.taux_assurance || 0;
+        document.getElementById("assurance_par_mois").checked = pret.assurance_par_mois == 1;
+        document.getElementById("compte_client_id").value = pret.compte_client_id || "";
         
         // Faire défiler vers le formulaire
         document.querySelector('.form-container').scrollIntoView({ behavior: 'smooth' });
@@ -279,9 +320,8 @@
     });
 
     // Chargement initial
-    document.addEventListener('DOMContentLoaded', function() {
-        chargerPrets();
-        chargerModalitesPourSelect();
-        chargerTypesPourSelect();
-    });
+    chargerPrets();
+    //chargerModalitesPourSelect();
+    chargerTypesPourSelect();
+    chargerComptesClientsPourSelect();
 </script>
