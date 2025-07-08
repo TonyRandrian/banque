@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../services/PretService.php';
 require_once __DIR__ . '/../models/StatusPret.php';
+require_once __DIR__ . '/../models/Fond.php';
 
 class PretController
 {
@@ -58,6 +59,20 @@ class PretController
                 }
             }
 
+            // Vérification du solde de la trésorerie
+            $solde = Fond::getLastSolde();
+            if (floatval($data['montant']) > floatval($solde)) {
+                Flight::json(['error' => "Solde de la trésorerie insuffisant pour accorder ce prêt (solde actuel : " . number_format($solde, 2, ',', ' ') . " €)"], 400);
+                return;
+            }
+
+            // Vérification de la date du mouvement
+            $lastDate = Fond::getLastDate();
+            if ($lastDate !== null && $data['date_demande'] < $lastDate) {
+                Flight::json(['error' => "La date du prêt doit être supérieure ou égale à la dernière date de mouvement ($lastDate)"], 400);
+                return;
+            }
+
             if (!isset($data['taux_assurance'])) {
                 $data['taux_assurance'] = 0.00;
             }
@@ -73,7 +88,6 @@ class PretController
             $result = (array)$result;
 
             // Ajout du status "Accepté" pour ce prêt via le modèle StatusPret
-            // Correction : $result peut être un tableau associatif ou un objet, ou l'id peut être sous une autre clé
             if (
                 (is_array($result) && isset($result['id']) && $result['id']) ||
                 (is_object($result) && isset($result->id) && $result->id)
@@ -91,6 +105,9 @@ class PretController
                         'pret_id' => $pret_id
                     ]);
                 }
+
+                // Soustraction du solde et insertion du nouveau solde via Fond
+                Fond::insertMouvement(-floatval($data['montant']), $data['date_demande']);
             } else {
                 error_log("Aucun id trouvé dans le résultat de PretService::create !");
             }
@@ -123,6 +140,23 @@ class PretController
                 Flight::json(['error' => 'Tous les champs sont requis'], 400);
                 return;
             }
+
+            // Vérification de la date du mouvement
+            $lastDate = Fond::getLastDate();
+            if ($lastDate !== null && $data['date_demande'] < $lastDate) {
+                Flight::json(['error' => "La date du prêt doit être supérieure ou égale à la dernière date de mouvement ($lastDate)"], 400);
+                return;
+            }
+
+            // Vérification du solde de la trésorerie
+            $db = getDB();
+            $solde = $db->query("SELECT solde FROM tresorerie ORDER BY date_mouvement DESC, id DESC LIMIT 1")->fetchColumn();
+            if ($solde === false) $solde = 0;
+            if (floatval($data['montant']) > floatval($solde)) {
+                Flight::json(['error' => "Solde de la trésorerie insuffisant pour accorder ce prêt (solde actuel : " . number_format($solde, 2, ',', ' ') . " €)"], 400);
+                return;
+            }
+
             if (!isset($data['taux_assurance'])) {
                 $data['taux_assurance'] = 0.00;
             }
