@@ -10,6 +10,9 @@
             <div class="form-row">
                 <input type="number" id="montant" name="montant" placeholder="Montant (€)" step="0.01" required>
             </div>
+            <div class="form-row">
+                <input type="date" id="date_creation" name="date_creation" required>
+            </div>
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">Ajouter le mouvement</button>
                 <button type="button" onclick="resetForm()" class="btn btn-secondary">Annuler</button>
@@ -123,16 +126,31 @@
         document.getElementById('result').style.display = 'none';
     }
 
+    // Met la date du jour par défaut dans le champ date_creation
+    document.addEventListener('DOMContentLoaded', function() {
+        const dateInput = document.getElementById('date_creation');
+        if (dateInput) {
+            const today = new Date();
+            dateInput.value = today.toISOString().slice(0, 10);
+        }
+        chargerFonds();
+    });
+
     document.getElementById('fond-form').addEventListener('submit', function(e) {
         e.preventDefault();
         const montant = document.getElementById('montant').value;
-        
-        if (!montant || parseFloat(montant) <= 0) {
+        const date_creation = document.getElementById('date_creation').value;
+
+        /*if (!montant || parseFloat(montant) <= 0) {
             showMessage('Veuillez saisir un montant valide supérieur à 0', 'error');
             return;
+        }*/
+        if (!date_creation) {
+            showMessage('Veuillez choisir une date de mouvement', 'error');
+            return;
         }
-        
-        const params = `montant=${encodeURIComponent(montant)}`;
+
+        const params = `montant=${encodeURIComponent(montant)}&date_creation=${encodeURIComponent(date_creation)}`;
         ajax("POST", "/api/fond/ajout", params, function(data) {
             showMessage(data.message || 'Mouvement ajouté avec succès', 'success');
             resetForm();

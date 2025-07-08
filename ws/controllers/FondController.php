@@ -17,31 +17,32 @@ class FondController
 
     public static function create()
     {
-        $data = Flight::request()->data;
-        $last = Fond::getLast();
-        $lastSolde = $last ? floatval($last['solde']) : 0;
-        $newSolde = $lastSolde + floatval($data->montant);
+        try {
+            $input = file_get_contents('php://input');
+            parse_str($input, $data);
 
-        // Générer la date du jour côté PHP
-        $today = date('Y-m-d');
-        $insertData = (object)[
-            'montant' => $newSolde,
-            'date_creation' => $today
-        ];
-        $id = Fond::create($insertData);
-        Flight::json(['message' => 'Fond ajouté', 'id' => $id]);
-    }
+            /*// Validation
+            if (!isset($data['montant']) || floatval($data['montant']) <= 0) {
+                Flight::json(['error' => 'Veuillez saisir un montant valide supérieur à 0'], 400);
+                return;
+            }*/
+            if (empty($data['date_creation'])) {
+                Flight::json(['error' => 'Veuillez choisir une date de mouvement'], 400);
+                return;
+            }
 
-    public static function update($id)
-    {
-        $data = Flight::request()->data;
-        Fond::update($id, $data);
-        Flight::json(['message' => 'Fond modifié']);
-    }
+            // Vérification de la date du mouvement
+            $lastDate = Fond::getLastDate();
+            if ($lastDate !== null && $data['date_creation'] < $lastDate) {
+                Flight::json(['error' => "La date du mouvement doit être supérieure ou égale à la dernière date de mouvement ($lastDate)"], 400);
+                return;
+            }
 
-    public static function delete($id)
-    {
-        Fond::delete($id);
-        Flight::json(['message' => 'Fond supprimé']);
+            Fond::create($data);
+
+            Flight::json(['message' => 'Mouvement ajouté avec succès']);
+        } catch (Exception $e) {
+            Flight::json(['error' => $e->getMessage()], 500);
+        }
     }
 }
