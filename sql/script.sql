@@ -42,6 +42,18 @@ CREATE TABLE employe
     PRIMARY KEY (id)
 );
 
+
+CREATE TABLE compte_client
+(
+    id            INT AUTO_INCREMENT,
+    numero        VARCHAR(50) NOT NULL,
+    date_creation DATE,
+    client_id     INT         NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (client_id) REFERENCES client (id)
+);
+
+
 CREATE TABLE config
 (
     id               INT AUTO_INCREMENT,

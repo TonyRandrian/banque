@@ -8,6 +8,7 @@ require_once 'modalite_route.php';
 require_once 'status_pret_route.php';
 require_once 'compte_client_routes.php';
 require_once 'paiement_modalite_routes.php';
+require_once 'compte_client_routes.php';
 
 // Routes pour les pages web avec template
 require_once __DIR__ . '/../helpers/AppConfig.php';

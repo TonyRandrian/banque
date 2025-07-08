@@ -22,14 +22,30 @@ class CompteClientController {
 
     public static function create() {
         try {
+            // Récupérer les données du body directement
             $input = file_get_contents('php://input');
             parse_str($input, $data);
-            if (empty($data['numero']) || empty($data['date_creation']) || empty($data['client_id'])) {
-                Flight::json(['error' => 'Tous les champs sont requis'], 400);
+            
+            // Debug : afficher les données reçues
+            error_log("Données CompteClient create reçues : " . print_r($data, true));
+            
+            // Vérifier que tous les champs requis sont présents
+            $requiredFields = ['nom', 'prenom', 'email', 'mdp', 'date_creation'];
+            foreach ($requiredFields as $field) {
+                if (!isset($data[$field]) || $data[$field] === '') {
+                    Flight::json(['error' => "Le champ '$field' est requis"], 400);
+                    return;
+                }
+            }
+            
+            // Vérifier le format email
+            if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+                Flight::json(['error' => 'Format email invalide'], 400);
                 return;
             }
-            $id = CompteClient::create($data);
-            Flight::json(['message' => 'Compte client ajouté', 'id' => $id]);
+            
+            $result = CompteClient::create($data);
+            Flight::json(['message' => 'Compte client créé avec succès', 'data' => $result]);
         } catch (Exception $e) {
             Flight::json(['error' => $e->getMessage()], 500);
         }
@@ -37,14 +53,30 @@ class CompteClientController {
 
     public static function update($id) {
         try {
+            // Récupérer les données du body directement
             $input = file_get_contents('php://input');
             parse_str($input, $data);
-            if (empty($data['numero']) || empty($data['date_creation']) || empty($data['client_id'])) {
-                Flight::json(['error' => 'Tous les champs sont requis'], 400);
+            
+            // Debug : afficher les données reçues
+            error_log("Données CompteClient update reçues : " . print_r($data, true));
+            
+            // Vérifier que les champs requis sont présents (sauf mdp qui est optionnel)
+            $requiredFields = ['nom', 'prenom', 'email'];
+            foreach ($requiredFields as $field) {
+                if (!isset($data[$field]) || $data[$field] === '') {
+                    Flight::json(['error' => "Le champ '$field' est requis"], 400);
+                    return;
+                }
+            }
+            
+            // Vérifier le format email
+            if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+                Flight::json(['error' => 'Format email invalide'], 400);
                 return;
             }
+            
             CompteClient::update($id, $data);
-            Flight::json(['message' => 'Compte client modifié']);
+            Flight::json(['message' => 'Compte client modifié avec succès']);
         } catch (Exception $e) {
             Flight::json(['error' => $e->getMessage()], 500);
         }
@@ -53,7 +85,7 @@ class CompteClientController {
     public static function delete($id) {
         try {
             CompteClient::delete($id);
-            Flight::json(['message' => 'Compte client supprimé']);
+            Flight::json(['message' => 'Compte client supprimé avec succès']);
         } catch (Exception $e) {
             Flight::json(['error' => $e->getMessage()], 500);
         }
