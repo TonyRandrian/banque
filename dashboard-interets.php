@@ -275,7 +275,7 @@
         totalRow.className = "total-row";
         totalRow.innerHTML = `
                 <td><strong>TOTAL</strong></td>
-                <td class="amount">${totalInterets.toLocaleString('fr-FR')} €</td>
+                <td class="amount" style="color: white">${totalInterets.toLocaleString('fr-FR')} €</td>
             `;
         tbody.appendChild(totalRow);
 
