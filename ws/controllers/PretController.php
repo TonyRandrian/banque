@@ -35,11 +35,6 @@ class PretController
             $modaliteStmt->execute(['libelle' => 'Annuelle']);
             $modalite = $modaliteStmt->fetch(PDO::FETCH_ASSOC);
 
-            if (!$modalite) {
-                Flight::json(['error' => "Modalité 'Annuelle' non trouvée dans la base de données"], 500);
-                return;
-            }
-
             $data['modalite_id'] = $modalite['id'];
 
             error_log("Données reçues : " . print_r($data, true));
