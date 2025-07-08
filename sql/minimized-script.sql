@@ -10,7 +10,7 @@ CREATE TABLE type_pret
     id                        INT AUTO_INCREMENT,
     libelle                   VARCHAR(50)    NOT NULL,
     taux                      DECIMAL(15, 2) NOT NULL,
-    delai_debut_remboursement INT                     DEFAULT 0,
+    delai_debut_remboursement INT DEFAULT 0,
     PRIMARY KEY (id)
 );
 

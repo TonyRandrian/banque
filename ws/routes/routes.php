@@ -11,6 +11,7 @@ require_once 'compte_client_routes.php';
 require_once 'paiement_modalite_routes.php';
 require_once 'simulation_paiement_modalite_routes.php';
 require_once 'compte_client_routes.php';
+require_once 'comparaison_route.php';
 
 // Routes pour les pages web avec template
 require_once __DIR__ . '/../helpers/AppConfig.php';

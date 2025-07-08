@@ -127,6 +127,8 @@ CREATE TABLE pret
     FOREIGN KEY (type_pret_id) REFERENCES type_pret (id)
 );
 
+
+
 CREATE TABLE paiement
 (
     id            INT AUTO_INCREMENT,
