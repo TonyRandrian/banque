@@ -3,6 +3,13 @@ require_once __DIR__ . '/../db.php';
 
 class SimulationPret
 {
+
+
+    public function __construct($db)
+    {
+        $this->db = $db;
+    }
+
     public static function create($data)
     {
         $db = getDB();
@@ -23,11 +30,6 @@ class SimulationPret
         $stmt->execute([$id]);
         $pret = $stmt->fetch(PDO::FETCH_ASSOC);
         return $pret;
-    private $db;
-
-    public function __construct($db)
-    {
-        $this->db = $db;
     }
 
     public static function getAll()
@@ -44,14 +46,14 @@ class SimulationPret
         $db = getDB();
         $stmt = $db->prepare("SELECT * FROM simulation_pret WHERE id = ?");
         $stmt->execute([$id]);
-        
+
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public static function getStatistiques($id)
     {
         $db = getDB();
-        
+
         // Récupérer les informations de base de la simulation
         $simulation = self::findById($id);
         if (!$simulation) {
