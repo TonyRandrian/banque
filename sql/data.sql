@@ -25,6 +25,16 @@ insert into compte_client(numero, date_creation, client_id)
 values ('CPT001', '2024-01-01', 1),
        ('CPT002', '2024-01-15', 2);
 
+-- Clients de test
+insert into client(email, prenom, nom, mdp)
+values ('client1@test.com', 'Jean', 'Dupont', 'password123'),
+       ('client2@test.com', 'Marie', 'Martin', 'password456');
+
+-- Comptes clients
+insert into compte_client(numero, date_creation, client_id)
+values ('CPT001', '2024-01-01', 1),
+       ('CPT002', '2024-01-15', 2);
+
 -- Prêts
 insert into pret(duree_remboursement, montant, date_demande, modalite_id, type_pret_id, compte_client_id)
 values (12, 6000, '2024-01-10', 1, 1, 1),
