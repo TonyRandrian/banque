@@ -6,14 +6,14 @@ class Fond
     public static function getAll()
     {
         $db = getDB();
-        $stmt = $db->query("SELECT * FROM tresorerie ORDER BY date_mouvement DESC, id DESC");
+        $stmt = $db->query("SELECT * FROM examS4_tresorerie ORDER BY date_mouvement DESC, id DESC");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public static function getById($id)
     {
         $db = getDB();
-        $stmt = $db->prepare("SELECT * FROM tresorerie WHERE id = ?");
+        $stmt = $db->prepare("SELECT * FROM examS4_tresorerie WHERE id = ?");
         $stmt->execute([$id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
@@ -22,7 +22,7 @@ class Fond
     {
         try {
             $db = getDB();
-            $stmt = $db->query("SELECT solde FROM tresorerie ORDER BY date_mouvement DESC, id DESC LIMIT 1");
+            $stmt = $db->query("SELECT solde FROM examS4_tresorerie ORDER BY date_mouvement DESC, id DESC LIMIT 1");
             $solde = $stmt->fetchColumn();
             
             if ($solde === false || $solde === null) {
@@ -41,7 +41,7 @@ class Fond
     {
         try {
             $db = getDB();
-            $stmt = $db->query("SELECT date_mouvement FROM tresorerie ORDER BY date_mouvement DESC, id DESC LIMIT 1");
+            $stmt = $db->query("SELECT date_mouvement FROM examS4_tresorerie ORDER BY date_mouvement DESC, id DESC LIMIT 1");
             $date = $stmt->fetchColumn();
             return $date === false ? null : $date;
             
@@ -63,7 +63,7 @@ class Fond
         }
 
         $nouveauSolde = $lastSolde + floatval($montant);
-        $stmt = $db->prepare("INSERT INTO tresorerie (date_mouvement, solde) VALUES (?, ?)");
+        $stmt = $db->prepare("INSERT INTO examS4_tresorerie (date_mouvement, solde) VALUES (?, ?)");
         $stmt->execute([$date_creation, $nouveauSolde]);
         return $db->lastInsertId();
     }
@@ -77,14 +77,14 @@ class Fond
     public static function update($id, $data)
     {
         $db = getDB();
-        $stmt = $db->prepare("UPDATE tresorerie SET solde = ?, date_mouvement = ? WHERE id = ?");
+        $stmt = $db->prepare("UPDATE examS4_tresorerie SET solde = ?, date_mouvement = ? WHERE id = ?");
         $stmt->execute([$data->montant, $data->date_creation, $id]);
     }
 
     public static function delete($id)
     {
         $db = getDB();
-        $stmt = $db->prepare("DELETE FROM tresorerie WHERE id = ?");
+        $stmt = $db->prepare("DELETE FROM examS4_tresorerie WHERE id = ?");
         $stmt->execute([$id]);
     }
    
@@ -147,7 +147,7 @@ class Fond
     public static function getLastSoldeBeforeDate($date) {
         try {
             $db = getDB();
-            $stmt = $db->prepare("SELECT solde FROM tresorerie WHERE date_mouvement <= ? ORDER BY date_mouvement DESC, id DESC LIMIT 1");
+            $stmt = $db->prepare("SELECT solde FROM examS4_tresorerie WHERE date_mouvement <= ? ORDER BY date_mouvement DESC, id DESC LIMIT 1");
             $stmt->execute([$date]);
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
             

@@ -1,19 +1,19 @@
 -- Jeu de données pour tester l'application bancaire
 
 -- Types de prêt
-INSERT INTO type_pret (libelle, taux, delai_debut_remboursement)
+INSERT INTO exams4_type_pret (libelle, taux, delai_debut_remboursement)
 VALUES ('Pret Immobilier', 3.50, 0),
        ('Pret Auto', 4.80, 1),
        ('Pret Personnel', 7.20, 0);
 
 -- Modalités de remboursement
-INSERT INTO modalite (libelle, nb_mois)
+INSERT INTO exams4_modalite (libelle, nb_mois)
 VALUES ('Mensuel', 1),
        ('Trimestriel', 3),
        ('Annuelle', 12);
 
 -- Statuts de prêt
-INSERT INTO enum_status_pret (libelle)
+INSERT INTO exams4_enum_status_pret (libelle)
 VALUES ('En attente'),
        ('Accepte'),
        ('Refuse'),
@@ -21,32 +21,32 @@ VALUES ('En attente'),
        ('Termine');
 
 -- Clients de test
-INSERT INTO client (email, prenom, nom, mdp)
+INSERT INTO exams4_client (email, prenom, nom, mdp)
 VALUES ('jean.dupont@email.com', 'Jean', 'Dupont', '$2y$10$hash123'),
        ('marie.martin@email.com', 'Marie', 'Martin', '$2y$10$hash456'),
        ('pierre.bernard@email.com', 'Pierre', 'Bernard', '$2y$10$hash789');
 
 -- Comptes clients
-INSERT INTO compte_client (numero, date_creation, client_id)
+INSERT INTO exams4_compte_client (numero, date_creation, client_id)
 VALUES ('CPT001', '2024-01-15', 1),
        ('CPT002', '2024-02-10', 2),
        ('CPT003', '2024-03-05', 3);
 
 -- Prêts de test
-INSERT INTO pret (duree_remboursement, montant, date_demande, modalite_id, type_pret_id, compte_client_id, taux_assurance, assurance_par_mois)
+INSERT INTO exams4_pret (duree_remboursement, montant, date_demande, modalite_id, type_pret_id, compte_client_id, taux_assurance, assurance_par_mois)
 VALUES (12, 12000.00, '2024-01-20', 1, 3, 1, 0.50, TRUE),  -- Prêt personnel 12 mois
        (24, 50000.00, '2024-02-15', 1, 2, 2, 0.30, TRUE),  -- Prêt auto 24 mois
        (36, 8000.00, '2024-03-10', 1, 3, 3, 0.00, FALSE);  -- Prêt personnel 36 mois sans assurance
 
 -- Statuts des prêts (tous acceptés)
-INSERT INTO status_pret (date_status, enum_pret_id, pret_id)
+INSERT INTO exams4_status_pret (date_status, enum_pret_id, pret_id)
 VALUES ('2024-01-25', 2, 1),
        ('2024-02-20', 2, 2),
        ('2024-03-15', 2, 3);
 
 -- Échéancier pour le prêt 1 : 12000€, 7.20% annuel (0.6% mensuel), 12 mois, assurance 0.5% mensuel
 -- Mensualité constante = 1053.25€, Assurance = 60€/mois (0.5% de 12000)
-INSERT INTO paiement_modalite (date_prevu_paiment, montant_prevu, mensualite, interet, amortissement, assurance, montant_restant, pret_id)
+INSERT INTO exams4_paiement_modalite (date_prevu_paiment, montant_prevu, mensualite, interet, amortissement, assurance, montant_restant, pret_id)
 VALUES ('2024-02-25', 1113.25, 1053.25, 72.00, 981.25, 60.00, 11018.75, 1),
        ('2024-03-25', 1113.25, 1053.25, 66.11, 987.14, 60.00, 10031.61, 1),
        ('2024-04-25', 1113.25, 1053.25, 60.19, 993.06, 60.00, 9038.55, 1),
@@ -62,7 +62,7 @@ VALUES ('2024-02-25', 1113.25, 1053.25, 72.00, 981.25, 60.00, 11018.75, 1),
 
 -- Échéancier pour le prêt 2 : 50000€, 4.80% annuel (0.4% mensuel), 24 mois, assurance 0.3% mensuel
 -- Mensualité constante = 2256.09€, Assurance = 150€/mois (0.3% de 50000)
-INSERT INTO paiement_modalite (date_prevu_paiment, montant_prevu, mensualite, interet, amortissement, assurance, montant_restant, pret_id)
+INSERT INTO exams4_paiement_modalite (date_prevu_paiment, montant_prevu, mensualite, interet, amortissement, assurance, montant_restant, pret_id)
 VALUES ('2024-03-20', 2406.09, 2256.09, 200.00, 2056.09, 150.00, 47943.91, 2),
        ('2024-04-20', 2406.09, 2256.09, 191.78, 2064.31, 150.00, 45879.60, 2),
        ('2024-05-20', 2406.09, 2256.09, 183.52, 2072.57, 150.00, 43807.03, 2),
@@ -90,7 +90,7 @@ VALUES ('2024-03-20', 2406.09, 2256.09, 200.00, 2056.09, 150.00, 47943.91, 2),
 
 -- Échéancier pour le prêt 3 : 8000€, 7.20% annuel (0.6% mensuel), 36 mois, sans assurance
 -- Mensualité constante = 248.31€
-INSERT INTO paiement_modalite (date_prevu_paiment, montant_prevu, mensualite, interet, amortissement, assurance, montant_restant, pret_id)
+INSERT INTO exams4_paiement_modalite (date_prevu_paiment, montant_prevu, mensualite, interet, amortissement, assurance, montant_restant, pret_id)
 VALUES ('2024-04-15', 248.31, 248.31, 48.00, 200.31, 0.00, 7799.69, 3),
        ('2024-05-15', 248.31, 248.31, 46.80, 201.51, 0.00, 7598.18, 3),
        ('2024-06-15', 248.31, 248.31, 45.59, 202.72, 0.00, 7395.46, 3),

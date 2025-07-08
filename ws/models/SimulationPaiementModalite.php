@@ -4,7 +4,7 @@ require_once __DIR__ . '/../db.php';
 class SimulationPaiementModalite {
     public static function create($data) {
         $db = getDB();
-        $stmt = $db->prepare("INSERT INTO simulation_paiement_modalite (date_prevu_paiment, montant_prevu, mensualite, interet, amortissement, assurance, montant_restant, simulation_pret_id)
+        $stmt = $db->prepare("INSERT INTO examS4_simulation_paiement_modalite (date_prevu_paiment, montant_prevu, mensualite, interet, amortissement, assurance, montant_restant, simulation_pret_id)
                               VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
         $stmt->execute([
             $data['date_prevu_paiment'],

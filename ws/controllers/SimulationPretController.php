@@ -13,7 +13,7 @@ class SimulationPretController
             $input = file_get_contents('php://input');
             parse_str($input, $data);
 
-            $modaliteStmt = $db->prepare("SELECT id FROM modalite WHERE libelle = :libelle or libelle = :libelle2");
+            $modaliteStmt = $db->prepare("SELECT id FROM examS4_modalite WHERE libelle = :libelle or libelle = :libelle2");
             $modaliteStmt->execute(['libelle' => 'Annuelle', 'libelle2'=>'Annuel']);
             $modalite = $modaliteStmt->fetch(PDO::FETCH_ASSOC);
 

@@ -43,7 +43,7 @@ class PretController
             $input = file_get_contents('php://input');
             parse_str($input, $data);
 
-            $modaliteStmt = $db->prepare("SELECT id FROM modalite WHERE libelle = :libelle or libelle = :libelle2");
+            $modaliteStmt = $db->prepare("SELECT id FROM examS4_modalite WHERE libelle = :libelle or libelle = :libelle2");
             $modaliteStmt->execute(['libelle' => 'Annuelle', 'libelle2'=>'Annuel']);
             $modalite = $modaliteStmt->fetch(PDO::FETCH_ASSOC);
 
@@ -95,7 +95,7 @@ class PretController
             ) {
                 $pret_id = is_array($result) ? $result['id'] : $result->id;
 
-                $enumStmt = $db->prepare("SELECT id FROM enum_status_pret WHERE libelle = 'Accepte' LIMIT 1");
+                $enumStmt = $db->prepare("SELECT id FROM examS4_enum_status_pret WHERE libelle = 'Accepte' LIMIT 1");
                 $enumStmt->execute();
                 $enum = $enumStmt->fetch(PDO::FETCH_ASSOC);
                 $enum_id = $enum ? $enum['id'] : null;
@@ -151,7 +151,7 @@ class PretController
 
             // Vérification du solde de la trésorerie
             $db = getDB();
-            $solde = $db->query("SELECT solde FROM tresorerie ORDER BY date_mouvement DESC, id DESC LIMIT 1")->fetchColumn();
+            $solde = $db->query("SELECT solde FROM examS4_tresorerie ORDER BY date_mouvement DESC, id DESC LIMIT 1")->fetchColumn();
             if ($solde === false) $solde = 0;
             if (floatval($data['montant']) > floatval($solde)) {
                 Flight::json(['error' => "Solde de la trésorerie insuffisant pour accorder ce prêt (solde actuel : " . number_format($solde, 2, ',', ' ') . " €)"], 400);

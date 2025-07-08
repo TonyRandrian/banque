@@ -7,10 +7,10 @@ class Pret
     {
         $db = getDB();
         $sql = "SELECT p.*, m.libelle AS modalite_libelle, t.libelle AS type_pret_libelle, cc.numero AS compte_client_numero
-                FROM pret p
-                JOIN modalite m ON p.modalite_id = m.id
-                JOIN type_pret t ON p.type_pret_id = t.id
-                JOIN compte_client cc ON p.compte_client_id = cc.id";
+                FROM examS4_pret p
+                JOIN examS4_modalite m ON p.modalite_id = m.id
+                JOIN examS4_type_pret t ON p.type_pret_id = t.id
+                JOIN examS4_compte_client cc ON p.compte_client_id = cc.id";
         return $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -20,20 +20,20 @@ class Pret
         $sql = "SELECT p.*, m.libelle AS modalite_libelle, t.libelle AS type_pret_libelle, 
                        cc.numero AS compte_client_numero, esp.libelle AS status_libelle,
                        s.date_status, COUNT(pm.id) as nb_paiements
-                FROM pret p
-                JOIN modalite m ON p.modalite_id = m.id
-                JOIN type_pret t ON p.type_pret_id = t.id
-                JOIN compte_client cc ON p.compte_client_id = cc.id
+                FROM examS4_pret p
+                JOIN examS4_modalite m ON p.modalite_id = m.id
+                JOIN examS4_type_pret t ON p.type_pret_id = t.id
+                JOIN examS4_compte_client cc ON p.compte_client_id = cc.id
                 JOIN (
                     SELECT pret_id, MAX(date_status) as max_date_status
-                    FROM status_pret sp
-                    JOIN enum_status_pret esp ON sp.enum_pret_id = esp.id
+                    FROM examS4_status_pret sp
+                    JOIN examS4_enum_status_pret esp ON sp.enum_pret_id = esp.id
                     WHERE esp.libelle = 'accepté'
                     GROUP BY pret_id
                 ) latest_status ON p.id = latest_status.pret_id
-                JOIN status_pret s ON p.id = s.pret_id AND s.date_status = latest_status.max_date_status
-                JOIN enum_status_pret esp ON s.enum_pret_id = esp.id
-                JOIN paiement_modalite pm ON p.id = pm.pret_id
+                JOIN examS4_status_pret s ON p.id = s.pret_id AND s.date_status = latest_status.max_date_status
+                JOIN examS4_enum_status_pret esp ON s.enum_pret_id = esp.id
+                JOIN examS4_paiement_modalite pm ON p.id = pm.pret_id
                 WHERE esp.libelle = 'accepté'
                 GROUP BY p.id, p.duree_remboursement, p.montant, p.date_demande, p.modalite_id, 
                          p.compte_client_id, p.type_pret_id, p.taux_assurance, p.assurance_par_mois,
@@ -52,11 +52,11 @@ class Pret
                                      cc.numero AS compte_numero,
                                      c.nom AS client_nom,
                                      c.prenom AS client_prenom
-                              FROM pret p
-                              JOIN modalite m ON p.modalite_id = m.id
-                              JOIN type_pret t ON p.type_pret_id = t.id
-                              JOIN compte_client cc ON p.compte_client_id = cc.id
-                              JOIN client c ON cc.client_id = c.id
+                              FROM examS4_pret p
+                              JOIN examS4_modalite m ON p.modalite_id = m.id
+                              JOIN examS4_type_pret t ON p.type_pret_id = t.id
+                              JOIN examS4_compte_client cc ON p.compte_client_id = cc.id
+                              JOIN examS4_client c ON cc.client_id = c.id
                               WHERE p.id = ?");
         $stmt->execute([$id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
@@ -65,7 +65,7 @@ class Pret
     public static function create($data)
     {
         $db = getDB();
-        $stmt = $db->prepare("INSERT INTO pret (duree_remboursement, montant, date_demande, modalite_id, type_pret_id, taux_assurance, assurance_par_mois, compte_client_id)
+        $stmt = $db->prepare("INSERT INTO examS4_pret (duree_remboursement, montant, date_demande, modalite_id, type_pret_id, taux_assurance, assurance_par_mois, compte_client_id)
                               VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
         $stmt->execute([
             $data['duree_remboursement'],
@@ -79,7 +79,7 @@ class Pret
         ]);
         $id = $db->lastInsertId();
         // Retourner l'objet inséré
-        $stmt = $db->prepare("SELECT * FROM pret WHERE id = ?");
+        $stmt = $db->prepare("SELECT * FROM examS4_pret WHERE id = ?");
         $stmt->execute([$id]);
         $pret = $stmt->fetch(PDO::FETCH_ASSOC);
         return $pret;
@@ -88,7 +88,7 @@ class Pret
     public static function update($id, $data)
     {
         $db = getDB();
-        $stmt = $db->prepare("UPDATE pret SET duree_remboursement=?, montant=?, date_demande=?, modalite_id=?, type_pret_id=?, taux_assurance=?, assurance_par_mois=?, compte_client_id=?
+        $stmt = $db->prepare("UPDATE examS4_pret SET duree_remboursement=?, montant=?, date_demande=?, modalite_id=?, type_pret_id=?, taux_assurance=?, assurance_par_mois=?, compte_client_id=?
                               WHERE id=?");
         $stmt->execute([
             $data['duree_remboursement'],
@@ -107,7 +107,7 @@ class Pret
     public static function delete($id)
     {
         $db = getDB();
-        $stmt = $db->prepare("DELETE FROM pret WHERE id=?");
+        $stmt = $db->prepare("DELETE FROM examS4_pret WHERE id=?");
         $stmt->execute([$id]);
         return ['success' => true];
     }
@@ -117,13 +117,13 @@ class Pret
         $db = getDB();
 
         // Récupérer le montant, le type_pret_id et la modalite_id pour ce prêt
-        $stmt = $db->prepare("SELECT montant, type_pret_id, modalite_id, duree_remboursement FROM pret WHERE id = ?");
+        $stmt = $db->prepare("SELECT montant, type_pret_id, modalite_id, duree_remboursement FROM examS4_pret WHERE id = ?");
         $stmt->execute([$pret_id]);
         $pret = $stmt->fetch(PDO::FETCH_ASSOC);
         if (!$pret) return null;
 
         // Récupérer le taux d'intérêt du type de prêt
-        $stmt = $db->prepare("SELECT taux FROM type_pret WHERE id = ?");
+        $stmt = $db->prepare("SELECT taux FROM examS4_type_pret WHERE id = ?");
         $stmt->execute([$pret['type_pret_id']]);
         $typePret = $stmt->fetch(PDO::FETCH_ASSOC);
         if (!$typePret) return null;
@@ -157,7 +157,7 @@ class Pret
         // Vérifier que le prêt est accepté (enum_pret_id = 2)
         $stmt = $db->prepare("
             SELECT MIN(date_status) AS date_acceptation
-            FROM status_pret
+            FROM examS4_status_pret
             WHERE pret_id = ? AND enum_pret_id = 2
         ");
         $stmt->execute([$pret_id]);
@@ -169,7 +169,7 @@ class Pret
         // Agréger par année et mois
         $stmt = $db->prepare("
             SELECT YEAR(date_prevu_paiment) as annee, MONTH(date_prevu_paiment) as mois, SUM(interet) as interet
-            FROM paiement_modalite
+            FROM examS4_paiement_modalite
             WHERE pret_id = ?
               AND DATE_FORMAT(date_prevu_paiment, '%Y-%m') >= ?
               AND DATE_FORMAT(date_prevu_paiment, '%Y-%m') <= ?
@@ -199,11 +199,11 @@ class Pret
         $db = getDB();
         $sql = "
             SELECT YEAR(pm.date_prevu_paiment) as annee, MONTH(pm.date_prevu_paiment) as mois, SUM(pm.interet) as interet
-            FROM paiement_modalite pm
-            JOIN pret p ON pm.pret_id = p.id
+            FROM examS4_paiement_modalite pm
+            JOIN examS4_pret p ON pm.pret_id = p.id
             JOIN (
                 SELECT pret_id, MIN(date_status) AS date_acceptation
-                FROM status_pret
+                FROM examS4_status_pret
                 WHERE enum_pret_id = 2
                 GROUP BY pret_id
             ) sp ON sp.pret_id = p.id
@@ -234,12 +234,12 @@ class Pret
             SELECT DISTINCT p.id, p.montant, p.date_demande, 
                    m.libelle AS modalite_libelle, t.libelle AS type_pret_libelle,
                    sp.date_acceptation
-            FROM pret p
-            JOIN modalite m ON p.modalite_id = m.id
-            JOIN type_pret t ON p.type_pret_id = t.id
+            FROM examS4_pret p
+            JOIN examS4_modalite m ON p.modalite_id = m.id
+            JOIN examS4_type_pret t ON p.type_pret_id = t.id
             JOIN (
                 SELECT pret_id, MIN(date_status) AS date_acceptation
-                FROM status_pret
+                FROM examS4_status_pret
                 WHERE enum_pret_id = 2
                 GROUP BY pret_id
             ) sp ON sp.pret_id = p.id

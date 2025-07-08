@@ -13,7 +13,7 @@ class SimulationPret
     public static function create($data)
     {
         $db = getDB();
-        $stmt = $db->prepare("INSERT INTO simulation_pret (duree_remboursement, montant, date_demande, modalite_id, type_pret_id, taux_assurance, assurance_par_mois)
+        $stmt = $db->prepare("INSERT INTO examS4_simulation_pret (duree_remboursement, montant, date_demande, modalite_id, type_pret_id, taux_assurance, assurance_par_mois)
                               VALUES (?, ?, ?, ?, ?, ?, ?)");
         $stmt->execute([
             $data['duree_remboursement'],
@@ -26,7 +26,7 @@ class SimulationPret
         ]);
         $id = $db->lastInsertId();
         // Retourner l'objet inséré
-        $stmt = $db->prepare("SELECT * FROM simulation_pret WHERE id = ?");
+        $stmt = $db->prepare("SELECT * FROM examS4_simulation_pret WHERE id = ?");
         $stmt->execute([$id]);
         $pret = $stmt->fetch(PDO::FETCH_ASSOC);
         return $pret;
@@ -35,7 +35,7 @@ class SimulationPret
     public static function getAll()
     {
         $db = getDB();
-        $stmt = $db->prepare("SELECT * FROM simulation_pret ORDER BY date_demande DESC");
+        $stmt = $db->prepare("SELECT * FROM examS4_simulation_pret ORDER BY date_demande DESC");
         $stmt->execute();
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -44,7 +44,7 @@ class SimulationPret
     public static function findById($id)
     {
         $db = getDB();
-        $stmt = $db->prepare("SELECT * FROM simulation_pret WHERE id = ?");
+        $stmt = $db->prepare("SELECT * FROM examS4_simulation_pret WHERE id = ?");
         $stmt->execute([$id]);
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
@@ -62,7 +62,7 @@ class SimulationPret
 
         // Récupérer tous les paiements de modalité pour cette simulation
         $stmt = $db->prepare("
-            SELECT * FROM simulation_paiement_modalite 
+            SELECT * FROM examS4_simulation_paiement_modalite 
             WHERE simulation_pret_id = ? 
             ORDER BY date_prevu_paiment ASC
         ");
