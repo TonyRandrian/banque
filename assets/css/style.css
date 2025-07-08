@@ -759,100 +759,289 @@ table tr:hover {
     box-shadow: 0 4px 12px rgba(44, 90, 160, 0.3);
 }
 
-/* Responsive */
+/* Styles pour la page de comparaison */
+.comparison-stats {
+    margin: 20px 0;
+}
+
+.stats-row {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    flex: 1;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-left: 4px solid #007bff;
+}
+
+.stat-card-primary {
+    border-left-color: #007bff;
+}
+
+.stat-card-success {
+    border-left-color: #28a745;
+}
+
+.stat-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    color: #2c3e50;
+}
+
+.stat-header i {
+    font-size: 20px;
+    color: #007bff;
+}
+
+.stat-card-success .stat-header i {
+    color: #28a745;
+}
+
+.stat-header h4 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.stat-content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+}
+
+.stat-item:hover {
+    background: #e9ecef;
+}
+
+.stat-icon {
+    font-size: 20px;
+    width: 35px;
+    text-align: center;
+}
+
+.stat-details {
+    flex: 1;
+    display: flex;
+    justify-content: between;
+    align-items: center;
+}
+
+.stat-label {
+    font-weight: 500;
+    color: #6c757d;
+    flex: 1;
+}
+
+.stat-value {
+    font-weight: 700;
+    color: #2c3e50;
+    font-size: 16px;
+}
+
+.stat-danger {
+    color: #dc3545 !important;
+}
+
+.comparison-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 80px;
+}
+
+.vs-badge {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    padding: 15px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    box-shadow: 0 4px 12px rgba(0,123,255,0.3);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.vs-badge i {
+    font-size: 16px;
+}
+
+.vs-badge span {
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.comparison-tables {
+    margin-top: 30px;
+}
+
+.table-comparison-row {
+    display: flex;
+    gap: 20px;
+}
+
+.table-container-left,
+.table-container-right {
+    flex: 1;
+}
+
+.table-title {
+    background: #f8f9fa;
+    padding: 15px;
+    margin: 0 0 15px 0;
+    border-radius: 6px 6px 0 0;
+    border-left: 4px solid #007bff;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.table-title-primary {
+    border-left-color: #007bff;
+    color: #007bff;
+}
+
+.table-title-success {
+    border-left-color: #28a745;
+    color: #28a745;
+}
+
+.table-responsive-custom {
+    max-height: 500px;
+    overflow-y: auto;
+    border: 1px solid #dee2e6;
+    border-radius: 0 0 6px 6px;
+}
+
+.comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    margin: 0;
+    font-size: 14px;
+}
+
+.comparison-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.comparison-table th {
+    background: #343a40;
+    color: white;
+    padding: 12px 8px;
+    font-weight: 600;
+    text-align: center;
+    border-bottom: 2px solid #007bff;
+}
+
+.comparison-table td {
+    padding: 10px 8px;
+    border-bottom: 1px solid #dee2e6;
+    text-align: center;
+}
+
+.comparison-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.comparison-table tbody tr:nth-child(even) {
+    background-color: #fdfdfd;
+}
+
+.amount {
+    font-weight: 600;
+}
+
+.amount-primary {
+    color: #007bff;
+}
+
+.amount-danger {
+    color: #dc3545;
+}
+
+.amount-success {
+    color: #28a745;
+}
+
+.amount-info {
+    color: #17a2b8;
+}
+
+.selected-row {
+    background-color: #e3f2fd !important;
+    border-left: 4px solid #2196f3;
+}
+
+.selected-row:hover {
+    background-color: #bbdefb !important;
+}
+
+.no-data {
+    color: #6c757d;
+    font-style: italic;
+    padding: 30px !important;
+}
+
+/* Responsive design pour la comparaison */
 @media (max-width: 768px) {
-    .sidebar {
-        width: 250px;
-        transform: translateX(-100%);
-    }
-    
-    .sidebar.open {
-        transform: translateX(0);
-    }
-    
-    .content {
-        margin-left: 0;
-        width: 100%;
-        padding: 20px;
-    }
-    
-    .hero-content h1 {
-        font-size: 36px;
-    }
-    
-    .services-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .form-row {
+    .stats-row {
         flex-direction: column;
+        gap: 15px;
     }
     
-    .form-row input,
-    .form-row select {
-        min-width: auto;
+    .comparison-divider {
+        transform: rotate(90deg);
+        margin: 10px 0;
     }
     
-    .hero-buttons,
-    .cta-buttons {
+    .table-comparison-row {
         flex-direction: column;
-        align-items: center;
+        gap: 15px;
     }
     
-    .welcome-container {
-        flex-direction: column;
-        text-align: center;
-        padding: 20px 15px;
-        gap: 30px;
-    }
-    
-    .welcome-title {
-        font-size: 2.5rem;
-    }
-    
-    .welcome-subtitle {
-        font-size: 1.1rem;
-    }
-    
-    .welcome-actions {
-        justify-content: center;
-    }
-    
-    .btn-lg {
-        min-width: 200px;
-    }
-    
-    .welcome-svg {
-        width: 90%;
-        max-width: 400px;
+    .table-responsive-custom {
+        max-height: 300px;
     }
 }
 
-@media (max-width: 480px) {
-    .stats-grid {
-        grid-template-columns: 1fr;
+/* Animation pour l'apparition des résultats */
+#comparaison-results {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
     }
-    
-    .stat-number {
-        font-size: 36px;
-    }
-    
-    .password-wrapper input {
-        padding: 10px 45px 10px 12px;
-        font-size: 16px; /* Évite le zoom sur iOS */
-    }
-    
-    .password-toggle {
-        right: 8px;
-        width: 28px;
-        height: 28px;
-    }
-    
-    .password-toggle i {
-        font-size: 14px;
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }

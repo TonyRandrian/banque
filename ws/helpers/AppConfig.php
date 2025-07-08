@@ -5,7 +5,7 @@ class AppConfig
 
     public static function getBasePath()
     {
-        return '/banque';
+        return '/Web/S4/banque';
     }
 
     public static function getRoutes()
@@ -90,6 +90,12 @@ class AppConfig
                 'link' => $basePath . '/ws/simulation-pret',
                 'icon' => '📊',
                 'page' => 'simulation_pret'
+            ],
+            [
+                'label' => 'Comparaison de prêts',
+                'link' => $basePath . '/ws/comparaison',
+                'icon' => '📊',
+                'page' => 'comparaison'
             ]
         ];
     }
