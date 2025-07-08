@@ -17,24 +17,22 @@ class TypePret {
 
     public static function create($data) {
         $db = getDB();
-        $stmt = $db->prepare("INSERT INTO type_pret (libelle, taux, delai_debut_remboursement, assurance_par_mois) VALUES (?, ?, ?, ?)");
+        $stmt = $db->prepare("INSERT INTO type_pret (libelle, taux, delai_debut_remboursement) VALUES (?, ?, ?)");
         $stmt->execute([
             $data->libelle,
             $data->taux,
-            $data->delai_debut_remboursement ?? 0,
-            $data->assurance_par_mois ?? 0
+            $data->delai_debut_remboursement ?? 0
         ]);
         return $db->lastInsertId();
     }
 
     public static function update($id, $data) {
         $db = getDB();
-        $stmt = $db->prepare("UPDATE type_pret SET libelle = ?, taux = ?, delai_debut_remboursement = ?, assurance_par_mois = ? WHERE id = ?");
+        $stmt = $db->prepare("UPDATE type_pret SET libelle = ?, taux = ?, delai_debut_remboursement = ? WHERE id = ?");
         $stmt->execute([
             $data->libelle,
             $data->taux,
             $data->delai_debut_remboursement ?? 0,
-            $data->assurance_par_mois ?? 0,
             $id
         ]);
     }

@@ -40,11 +40,6 @@ class TypePretController {
                 return;
             }
             
-            // Définir taux_assurance par défaut si non fourni
-            if (!isset($data->taux_assurance)) {
-                $data->taux_assurance = 0.00;
-            }
-            
             // Définir delai_debut_remboursement par défaut si non fourni
             if (!isset($data->delai_debut_remboursement)) {
                 $data->delai_debut_remboursement = 0;
@@ -74,11 +69,6 @@ class TypePretController {
             if (empty($data->libelle) || empty($data->taux)) {
                 Flight::json(['error' => 'Libellé et taux sont requis'], 400);
                 return;
-            }
-            
-            // Définir taux_assurance par défaut si non fourni
-            if (!isset($data->taux_assurance)) {
-                $data->taux_assurance = 0.00;
             }
             
             // Définir delai_debut_remboursement par défaut si non fourni

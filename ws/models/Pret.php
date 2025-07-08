@@ -32,12 +32,11 @@ class Pret
         $db = getDB();
         $stmt = $db->prepare("INSERT INTO pret (duree_remboursement, montant, date_demande, modalite_id, type_pret_id, taux_assurance, assurance_par_mois, compte_client_id)
                               VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-        $modalite = Modalite::findByLibelle("Annuelle");
         $stmt->execute([
             $data['duree_remboursement'],
             $data['montant'],
             $data['date_demande'],
-            $modalite,
+            $data['modalite_id'],
             $data['type_pret_id'],
             $data['taux_assurance'] ?? 0.00,
             $data['assurance_par_mois'] ?? 0,
@@ -51,12 +50,11 @@ class Pret
         $db = getDB();
         $stmt = $db->prepare("UPDATE pret SET duree_remboursement=?, montant=?, date_demande=?, modalite_id=?, type_pret_id=?, taux_assurance=?, assurance_par_mois=?, compte_client_id=?
                               WHERE id=?");
-        $modalite = Modalite::findByLibelle("Annuelle");
         $stmt->execute([
             $data['duree_remboursement'],
             $data['montant'],
             $data['date_demande'],
-            $modalite,
+            $data['modalite_id'],
             $data['type_pret_id'],
             $data['taux_assurance'] ?? 0.00,
             $data['assurance_par_mois'] ?? 0,

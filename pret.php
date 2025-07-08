@@ -12,12 +12,12 @@
                 <input type="number" id="montant" placeholder="Montant (€)" step="0.01" min="1" required>
                 <input type="number" id="duree_remboursement" placeholder="Durée remboursement (mois)" min="1" max="360" required>
             </div>
-            <!-- <div class="form-row">
+            <div class="form-row">
                 <input type="date" id="date_demande" required>
                 <select id="modalite_id" required>
                     <option value="">Sélectionnez une modalité</option>
                 </select>
-            </div> -->
+            </div>
             <div class="form-row">
                 <select id="type_pret_id" required>
                     <option value="">Sélectionnez un type de prêt</option>
@@ -161,7 +161,7 @@
         });
     }
 
-    /*function chargerModalitesPourSelect() {
+    function chargerModalitesPourSelect() {
         ajax("GET", "/modalites", null, (data) => {
             const select = document.getElementById("modalite_id");
             select.innerHTML = '<option value="">Sélectionnez une modalité</option>';
@@ -179,7 +179,7 @@
         }, (error) => {
             console.error('Erreur lors du chargement des modalités:', error);
         });
-    }*/
+    }
 
     function chargerTypesPourSelect() {
         ajax("GET", "/type-prets", null, (data) => {
@@ -321,7 +321,7 @@
 
     // Chargement initial
     chargerPrets();
-    //chargerModalitesPourSelect();
+    chargerModalitesPourSelect();
     chargerTypesPourSelect();
     chargerComptesClientsPourSelect();
 </script>

@@ -7,10 +7,10 @@ CREATE TABLE enum_status_pret
 
 CREATE TABLE type_pret
 (
-    id      INT AUTO_INCREMENT,
-    libelle VARCHAR(50)    NOT NULL,
-    taux    DECIMAL(15, 2) NOT NULL,
-    delai_debut_remboursement INT DEFAULT 0 ,
+    id                        INT AUTO_INCREMENT,
+    libelle                   VARCHAR(50)    NOT NULL,
+    taux                      DECIMAL(15, 2) NOT NULL,
+    delai_debut_remboursement INT                     DEFAULT 0,
     PRIMARY KEY (id)
 );
 
@@ -59,30 +59,32 @@ CREATE TABLE compte_client
     FOREIGN KEY (client_id) REFERENCES client (id)
 );
 
-CREATE TABLE status_pret
-(
-    id           INT AUTO_INCREMENT,
-    date_status  DATE NOT NULL,
-    enum_pret_id INT  NOT NULL,
-    PRIMARY KEY (id),
-    FOREIGN KEY (enum_pret_id) REFERENCES enum_status_pret (id)
-);
-
 CREATE TABLE pret
 (
     id                  INT AUTO_INCREMENT,
     duree_remboursement DECIMAL(15, 2) NOT NULL,
     montant             DECIMAL(15, 2) NOT NULL,
-    date_demande        INT            NOT NULL,
+    date_demande        DATE           NOT NULL,
     modalite_id         INT            NOT NULL,
     compte_client_id    INT            NOT NULL,
     type_pret_id        INT            NOT NULL,
-    taux_assurance      DECIMAL(15, 2) DEFAULT 0.00,
-    assurance_par_mois  BOOLEAN NOT NULL DEFAULT FALSE,
+    taux_assurance      DECIMAL(15, 2)          DEFAULT 0.00,
+    assurance_par_mois  BOOLEAN        NOT NULL DEFAULT FALSE,
     PRIMARY KEY (id),
     FOREIGN KEY (modalite_id) REFERENCES modalite (id),
     FOREIGN KEY (compte_client_id) REFERENCES compte_client (id),
     FOREIGN KEY (type_pret_id) REFERENCES type_pret (id)
+);
+
+CREATE TABLE status_pret
+(
+    id           INT AUTO_INCREMENT,
+    date_status  DATE NOT NULL,
+    enum_pret_id INT  NOT NULL,
+    pret_id      INT  NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (enum_pret_id) REFERENCES enum_status_pret (id),
+    FOREIGN KEY (pret_id) REFERENCES pret (id)
 );
 
 CREATE TABLE paiement_modalite
@@ -90,6 +92,8 @@ CREATE TABLE paiement_modalite
     id                 INT AUTO_INCREMENT,
     date_prevu_paiment DATE           NOT NULL,
     montant_prevu      DECIMAL(15, 2) NOT NULL,
+    interet            DECIMAL(15, 2) NOT NULL,
+    amortissement      DECIMAL(15, 2) NOT NULL,
     pret_id            INT            NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (pret_id) REFERENCES pret (id)

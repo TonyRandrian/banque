@@ -13,10 +13,20 @@ values ('en attente'),
        ('accepté'),
        ('refusé');
 
+-- Clients de test
+insert into client(email, prenom, nom, mdp)
+values ('client1@test.com', 'Jean', 'Dupont', 'password123'),
+       ('client2@test.com', 'Marie', 'Martin', 'password456');
+
+-- Comptes clients
+insert into compte_client(numero, date_creation, client_id)
+values ('CPT001', '2024-01-01', 1),
+       ('CPT002', '2024-01-15', 2);
+
 -- Prêts
-insert into pret(duree_remboursement, montant, date_demande, modalite_id, type_pret_id)
-values (12, 6000, '2024-01-10', 1, 1),
-       (24, 48000, '2024-02-01', 1, 2);
+insert into pret(duree_remboursement, montant, date_demande, modalite_id, type_pret_id, compte_client_id)
+values (12, 6000, '2024-01-10', 1, 1, 1),
+       (24, 48000, '2024-02-01', 1, 2, 2);
 
 -- Statuts des prêts (acceptés)
 insert into status_pret(date_status, enum_pret_id, pret_id)
@@ -24,7 +34,7 @@ values ('2024-01-15', 2, 1),
        ('2024-02-10', 2, 2);
 
 -- 12 échéances mensuelles pour le prêt 1 (déjà présentes)
-insert into paiement_modalite(date_prevu_paiment, montant_prevu, interet, amortissement, , pret_id)
+insert into paiement_modalite(date_prevu_paiment, montant_prevu, interet, amortissement, pret_id)
 values ('2024-02-10', 968.62, 720, 248.62, 1),
        ('2024-03-10', 968.62, 690.17, 278.45, 1),
        ('2024-04-10', 968.62, 656.75, 311.87, 1),
@@ -65,34 +75,30 @@ values ('2024-03-01', 2172.57, 320.00, 1852.57, 2),
        ('2026-01-01', 2172.57, 28.89, 2143.68, 2),
        ('2026-02-01', 2172.57, 14.72, 2157.85, 2),
        ('2026-03-01', 2172.57, 0.47, 2172.10, 2);
-drop database banque;
-create database banque;
-use banque;
-
 -- Jeu de données pour tester la simulation de prêt
 
 -- Clients
-INSERT INTO client (email, prenom, mdp, nom) VALUES
-('alice@example.com', 'Alice', 'pass1', 'Durand'),
-('bob@example.com', 'Bob', 'pass2', 'Martin');
+INSERT INTO client (email, prenom, mdp, nom)
+VALUES ('alice@example.com', 'Alice', 'pass1', 'Durand'),
+       ('bob@example.com', 'Bob', 'pass2', 'Martin');
 
 -- Comptes clients
-INSERT INTO compte_client (numero, date_creation, client_id) VALUES
-('CC1001', '2024-01-10', 1),
-('CC1002', '2024-02-15', 2);
+INSERT INTO compte_client (numero, date_creation, client_id)
+VALUES ('CC1001', '2024-01-10', 1),
+       ('CC1002', '2024-02-15', 2);
 
 -- Types de prêt
-INSERT INTO type_pret (libelle, taux, delai_debut_remboursement) VALUES
-('Pret Habitat', 2.50, 0),
-('Pret Auto', 3.20, 2),
-('Pret Perso', 4.00, 1);
+INSERT INTO type_pret (libelle, taux, delai_debut_remboursement)
+VALUES ('Pret Habitat', 2.50, 0),
+       ('Pret Auto', 3.20, 2),
+       ('Pret Perso', 4.00, 1);
 
 -- Modalités
-INSERT INTO modalite (libelle, nb_mois) VALUES
-('Annuelle', 12);
+INSERT INTO modalite (libelle, nb_mois)
+VALUES ('Annuelle', 12);
 
 -- Enum status prêt
-INSERT INTO enum_status_pret (libelle) VALUES
-('En attente'),
-('Accepté'),
-('Refusé');
+INSERT INTO enum_status_pret (libelle)
+VALUES ('En attente'),
+       ('Accepté'),
+       ('Refusé');
