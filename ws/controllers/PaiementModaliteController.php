@@ -17,9 +17,7 @@ class PaiementModaliteController {
         parse_str($input, $data);
         if (
             empty($data['date_prevu_paiment']) || empty($data['montant_prevu']) ||
-            empty($data['mensualite']) || empty($data['interet']) ||
-            empty($data['amortissement']) || !isset($data['assurance']) ||
-            empty($data['montant_restant']) || empty($data['pret_id'])
+            empty($data['interet']) || empty($data['amortissement']) || empty($data['pret_id'])
         ) {
             Flight::json(['error' => 'Tous les champs sont requis'], 400);
             return;

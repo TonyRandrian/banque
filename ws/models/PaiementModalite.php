@@ -17,16 +17,13 @@ class PaiementModalite {
 
     public static function create($data) {
         $db = getDB();
-        $stmt = $db->prepare("INSERT INTO paiement_modalite (date_prevu_paiment, montant_prevu, mensualite, interet, amortissement, assurance, montant_restant, pret_id)
-                              VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt = $db->prepare("INSERT INTO paiement_modalite (date_prevu_paiment, montant_prevu, interet, amortissement, pret_id)
+                              VALUES (?, ?, ?, ?, ?)");
         $stmt->execute([
             $data['date_prevu_paiment'],
             $data['montant_prevu'],
-            $data['mensualite'],
             $data['interet'],
             $data['amortissement'],
-            $data['assurance'],
-            $data['montant_restant'],
             $data['pret_id']
         ]);
         return $db->lastInsertId();

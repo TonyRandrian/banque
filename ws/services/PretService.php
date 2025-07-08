@@ -8,6 +8,10 @@ class PretService {
         return Pret::allWithRelations();
     }
 
+    public static function getAllValide() {
+        return Pret::allWithRelationsValid();
+    }
+
     public static function getById($id) {
         return Pret::findWithRelations($id);
     }
