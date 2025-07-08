@@ -214,4 +214,31 @@ class PretController
         echo json_encode($result);
     }
 
+    /**
+     * Web service pour exporter un prêt en PDF
+     */
+    public static function exportPDF($id)
+    {
+        try {
+            $pret = PretService::getById($id);
+            if (!$pret) {
+                Flight::json(['error' => 'Prêt non trouvé'], 404);
+                return;
+            }
+
+            // Pour l'instant, on retourne juste les données
+            // Plus tard, on pourra implémenter la génération PDF avec une bibliothèque comme TCPDF
+            require_once __DIR__ . '/../models/PaiementModalite.php';
+            $paiements = PaiementModalite::getByPret($id);
+            
+            Flight::json([
+                'pret' => $pret,
+                'paiements' => $paiements,
+                'message' => 'Données du prêt récupérées. Export PDF à implémenter.'
+            ]);
+        } catch (Exception $e) {
+            Flight::json(['error' => $e->getMessage()], 500);
+        }
+    }
+
 }
