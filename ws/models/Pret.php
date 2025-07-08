@@ -14,7 +14,7 @@ class Pret
         return $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public static function allWithRelationsValid(): array
+    public static function allWithRelationsValid()
     {
         $db = getDB();
         $sql = "SELECT p.*, m.libelle AS modalite_libelle, t.libelle AS type_pret_libelle, 
@@ -35,7 +35,6 @@ class Pret
                 JOIN enum_status_pret esp ON s.enum_pret_id = esp.id
                 WHERE esp.libelle = 'accepté'
                 ORDER BY s.date_status DESC";
-
         return $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     }
 

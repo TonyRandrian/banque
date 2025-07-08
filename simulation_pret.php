@@ -47,13 +47,6 @@
 </div>
 
 <script>
-    // Point d'accès API centralisé
-    if (typeof window.apiBase === 'undefined') {
-        var apiBase = "http://localhost/banque/ws";
-    } else {
-        var apiBase = window.apiBase;
-    }
-
     function ajax(method, url, data, callback, errorCallback) {
         const xhr = new XMLHttpRequest();
         xhr.open(method, apiBase + url, true);
@@ -174,9 +167,6 @@
         let assuranceTotal = montant * tauxAssurance / 100;
         let assuranceMensuelle = assuranceParMois ? (assuranceTotal / duree) : 0;
 
-        // Réinitialiser le tableau des paiements simulés
-        simulationPaiements = [];
-
         for (let i = 1; i <= duree; i++) {
             console.log(`Calcul de la mensualité pour le paiement #${i}`);
             // Calcul de l'intérêt et de l'amortissement
@@ -185,12 +175,8 @@
             montantRestant = montantRestant - amortissement;
             if (montantRestant < 0) montantRestant = 0;
 
-            // Format date paiement pour l'affichage
+            // Format date paiement (mois suivant à chaque itération)
             const dateStr = datePaiement.toLocaleDateString('fr-FR');
-            // Format date pour la base de données (YYYY-MM-DD)
-            const dateSQL = datePaiement.getFullYear() + '-' + 
-                           String(datePaiement.getMonth() + 1).padStart(2, '0') + '-' + 
-                           String(datePaiement.getDate()).padStart(2, '0');
 
             let assurance = 0;
             if (assuranceParMois) {
@@ -198,14 +184,6 @@
             } else if (i === 1) {
                 assurance = assuranceTotal;
             }
-
-            // Stocker les données pour la validation
-            simulationPaiements.push({
-                date_prevu_paiment: dateSQL,
-                montant_prevu: (mensualite + assurance).toFixed(2),
-                interet: interet.toFixed(2),
-                amortissement: amortissement.toFixed(2)
-            });
 
             rows += `
         <tr>
@@ -274,35 +252,21 @@
                 const pret_id = response.data.id;
                 // Insertion des paiements simulés
                 let inserted = 0;
-                let totalPaiements = simulationPaiements.length;
-                
-                if (totalPaiements === 0) {
-                    alert("Aucun paiement à insérer. Veuillez d'abord faire une simulation.");
-                    return;
-                }
-                
                 simulationPaiements.forEach((p, idx) => {
-                    const paiementData = `date_prevu_paiment=${p.date_prevu_paiment}&montant_prevu=${p.montant_prevu}&interet=${p.interet}&amortissement=${p.amortissement}&pret_id=${pret_id}`;
-                    ajax("POST", "/paiement-modalites", paiementData, (paiementResponse) => {
+                    const paiementData = `date_prevu_paiment=${p.date_prevu_paiment}&montant_prevu=${p.montant_prevu}&mensualite=${p.mensualite}&interet=${p.interet}&amortissement=${p.amortissement}&assurance=${p.assurance}&montant_restant=${p.montant_restant}&pret_id=${pret_id}`;
+                    ajax("POST", "/paiement-modalites", paiementData, () => {
                         inserted++;
-                        console.log(`Paiement ${inserted}/${totalPaiements} inséré`);
-                        if (inserted === totalPaiements) {
-                            alert("Prêt et échéancier enregistrés avec succès !");
+                        if (inserted === simulationPaiements.length) {
+                            alert("Prêt et échéancier enregistrés !");
                             resetForm();
                             document.getElementById("tableau-amortissement").innerHTML = "";
                             document.getElementById("validation-zone").style.display = "none";
-                            simulationPaiements = []; // Vider le tableau
                         }
-                    }, (error) => {
-                        console.error(`Erreur lors de l'insertion du paiement ${idx + 1}:`, error);
-                        alert(`Erreur lors de l'insertion du paiement ${idx + 1}: ${error}`);
                     });
                 });
             } else {
                 alert("Erreur lors de la création du prêt.");
             }
-        }, (error) => {
-            alert("Erreur lors de la création du prêt: " + error);
         });
     };
 

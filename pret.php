@@ -64,27 +64,6 @@
             </tbody>
         </table>
     </div>
-
-    <div class="table-container">
-        <h3>Prêts Validés (Acceptés)</h3>
-        <table id="table-prets-valides">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Durée remboursement</th>
-                    <th>Montant</th>
-                    <th>Date demande</th>
-                    <th>Date validation</th>
-                    <th>Modalité</th>
-                    <th>Type prêt</th>
-                    <th>Statut</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr><td colspan="8">Chargement...</td></tr>
-            </tbody>
-        </table>
-    </div>
 </div>
 
 <script>
@@ -175,46 +154,6 @@
         });
     }
 
-    function chargerPretsValides() {
-        ajax("GET", "/prets/valide", null, (data) => {
-            const tbody = document.querySelector("#table-prets-valides tbody");
-            tbody.innerHTML = "";
-            
-            if (!Array.isArray(data)) {
-                tbody.innerHTML = '<tr><td colspan="8">Erreur: Format de données invalide</td></tr>';
-                return;
-            }
-            
-            if (data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="8">Aucun prêt validé trouvé</td></tr>';
-                return;
-            }
-            
-            data.forEach(pret => {
-                const tr = document.createElement("tr");
-                // Formatage des dates
-                const dateDemandeFormatted = new Date(pret.date_demande).toLocaleDateString('fr-FR');
-                const dateValidationFormatted = new Date(pret.date_status).toLocaleDateString('fr-FR');
-                const montantFormatted = parseFloat(pret.montant).toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' });
-                
-                tr.innerHTML = `
-                    <td><strong>#${pret.id}</strong></td>
-                    <td><span class="badge badge-info">${pret.duree_remboursement} mois</span></td>
-                    <td><strong>${montantFormatted}</strong></td>
-                    <td>${dateDemandeFormatted}</td>
-                    <td><span class="badge badge-success">${dateValidationFormatted}</span></td>
-                    <td><span class="badge badge-secondary">${pret.modalite_libelle || '#' + pret.modalite_id}</span></td>
-                    <td><span class="badge badge-primary">${pret.type_pret_libelle || '#' + pret.type_pret_id}</span></td>
-                    <td><span class="badge badge-success">${pret.status_libelle}</span></td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }, (error) => {
-            const tbody = document.querySelector("#table-prets-valides tbody");
-            tbody.innerHTML = `<tr><td colspan="8">Erreur: ${error}</td></tr>`;
-        });
-    }
-
     function chargerModalitesPourSelect() {
         ajax("GET", "/modalites", null, (data) => {
             const select = document.getElementById("modalite_id");
@@ -256,7 +195,7 @@
     }
 
     function chargerComptesClientsPourSelect() {
-        ajax("GET", "/compte-clients", null, (data) => {
+        ajax("GET", "/comptes-clients", null, (data) => {
             const select = document.getElementById("compte_client_id");
             select.innerHTML = '<option value="">Sélectionnez un client</option>';
             if (Array.isArray(data)) {
@@ -375,7 +314,6 @@
 
     // Chargement initial
     chargerPrets();
-    chargerPretsValides();
     chargerModalitesPourSelect();
     chargerTypesPourSelect();
     chargerComptesClientsPourSelect();

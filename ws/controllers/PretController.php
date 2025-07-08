@@ -14,6 +14,7 @@ class PretController
         }
     }
 
+
     public static function getValide()
     {
         try {
@@ -34,7 +35,6 @@ class PretController
         }
     }
 
-
     public static function create()
     {
         try {
@@ -42,19 +42,11 @@ class PretController
             $input = file_get_contents('php://input');
             parse_str($input, $data);
 
-            // Si aucune modalité n'est fournie, utiliser "Annuelle" par défaut
-            if (!isset($data['modalite_id']) || empty($data['modalite_id'])) {
-                $modaliteStmt = $db->prepare("SELECT id FROM modalite WHERE libelle = :libelle");
-                $modaliteStmt->execute(['libelle' => 'Annuelle']);
-                $modalite = $modaliteStmt->fetch(PDO::FETCH_ASSOC);
-                
-                if (!$modalite) {
-                    Flight::json(['error' => "Modalité 'Annuelle' non trouvée dans la base de données"], 500);
-                    return;
-                }
-                
-                $data['modalite_id'] = $modalite['id'];
-            }
+            $modaliteStmt = $db->prepare("SELECT id FROM modalite WHERE libelle = :libelle");
+            $modaliteStmt->execute(['libelle' => 'Annuelle']);
+            $modalite = $modaliteStmt->fetch(PDO::FETCH_ASSOC);
+
+            $data['modalite_id'] = $modalite['id'];
 
             error_log("Données reçues : " . print_r($data, true));
 
