@@ -3,7 +3,7 @@ require_once __DIR__ . '/../db.php';
 
 class SimulationPret
 {
-
+    private $db;
 
     public function __construct($db)
     {

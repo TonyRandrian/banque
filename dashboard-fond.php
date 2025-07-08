@@ -191,18 +191,28 @@
 
     function ajax(method, url, data, callback, errorCallback) {
         const xhr = new XMLHttpRequest();
-        xhr.open(method, url, true);
+        xhr.open(method, apiBase + url, true);
         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         xhr.onreadystatechange = () => {
             if (xhr.readyState === 4) {
                 if (xhr.status === 200) {
                     try {
-                        callback(JSON.parse(xhr.responseText));
+                        const response = JSON.parse(xhr.responseText);
+                        callback(response);
                     } catch (e) {
-                        if (errorCallback) errorCallback("Erreur de parsing JSON");
+                        if (errorCallback) errorCallback(`Erreur de parsing JSON: ${e.message}`);
+                        else showMessage(`Erreur de parsing JSON: ${e.message}`, 'error');
                     }
                 } else {
-                    if (errorCallback) errorCallback(`Erreur HTTP: ${xhr.status}`);
+                    let errorMessage = `Erreur HTTP ${xhr.status}`;
+                    try {
+                        const errorResponse = JSON.parse(xhr.responseText);
+                        errorMessage += `: ${errorResponse.error || errorResponse.message || 'Erreur inconnue'}`;
+                    } catch (e) {
+                        errorMessage += `: ${xhr.responseText || 'Erreur inconnue'}`;
+                    }
+                    if (errorCallback) errorCallback(errorMessage);
+                    else showMessage(errorMessage, 'error');
                 }
             }
         };
@@ -228,7 +238,7 @@
         tbody.innerHTML = '<tr><td colspan="2" class="loading">Chargement des données...</td></tr>';
 
         const params = `date_debut=${encodeURIComponent(dateDebut)}&date_fin=${encodeURIComponent(dateFin)}`;
-        ajax("POST", "/banque/ws/api/fonds/mois", params, function (data) {
+        ajax("POST", "/api/fonds/mois", params, function (data) {
             if (data && typeof data === 'object' && !data.error) {
                 currentData = data;
                 afficherTableau(data);
@@ -326,7 +336,7 @@
     };
 
     function chargerStatistiques() {
-        ajax("GET", "/banque/ws/api/fonds/stats", "", function (data) {
+        ajax("GET", "/api/fonds/stats", "", function (data) {
             if (data && !data.error) {
                 // Afficher les statistiques en haut si nécessaire
                 console.log("Statistiques des fonds:", data);

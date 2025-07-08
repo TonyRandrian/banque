@@ -34,7 +34,7 @@ if (!isset($activePage)) {
     <!-- Sidebar -->
     <nav class="sidebar">
         <div class="sidebar-header">
-            <h3>🏦 Banque</h3>
+            <h3>🏦 Banquejbobobuibiu</h3>
         </div>
 
         <ul class="list-unstyled components">

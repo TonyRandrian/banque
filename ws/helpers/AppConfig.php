@@ -32,7 +32,7 @@ class AppConfig
                 'content' => 'status-pret'
             ],
             'dashboard-fond' => [
-                'title' => 'dashboard-fon',
+                'title' => 'dashboard-fond',
                 'content' => 'dashboard-fond'
             ],
             'compte-client' => [
@@ -85,7 +85,7 @@ class AppConfig
             ],
             [
                 'label' => 'Fond par mois',
-                'link' => $basePath . '/ws/fond/dashboard',
+                'link' => $basePath . '/ws/dashboard',
                 'icon' => '💰',
                 'page' => 'dashboard-fond'
             ],

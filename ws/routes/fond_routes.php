@@ -19,7 +19,7 @@ Flight::route('GET /fond', function() {
 });
 
 // Route pour servir la page HTML
-Flight::route('GET /fond/dashboard', function() {
+Flight::route('GET /dashboard', function() {
     $data = [
         'pageTitle' => "Dashboard de fond",
         'page' => "dashboard-fond", 

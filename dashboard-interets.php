@@ -371,16 +371,6 @@
         return `${moisNoms[parseInt(moisNum) - 1]} ${annee}`;
     }
 
-    // Charger la config API globale si présente
-    if (typeof window.apiBase === 'undefined') {
-        var script = document.createElement('script');
-        script.src = '/Web/S4/banque/public/api-config.js';
-        script.onload = function () {
-            window.onload && window.onload();
-        };
-        document.head.appendChild(script);
-    }
-
     window.onload = function () {
         const now = new Date();
         const yyyy_mm = now.toISOString().slice(0, 7);
