@@ -24,7 +24,7 @@ values ('2024-01-15', 2, 1),
        ('2024-02-10', 2, 2);
 
 -- 12 échéances mensuelles pour le prêt 1 (déjà présentes)
-insert into paiement_modalite(date_prevu_paiment, montant_prevu, interet, amortissement, pret_id)
+insert into paiement_modalite(date_prevu_paiment, montant_prevu, interet, amortissement, , pret_id)
 values ('2024-02-10', 968.62, 720, 248.62, 1),
        ('2024-03-10', 968.62, 690.17, 278.45, 1),
        ('2024-04-10', 968.62, 656.75, 311.87, 1),

@@ -49,7 +49,6 @@
     </div>
 </div>
 
-
 <script>
     const apiBase = window.apiBase;
 

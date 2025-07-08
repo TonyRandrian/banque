@@ -7,10 +7,10 @@ CREATE TABLE enum_status_pret
 
 CREATE TABLE type_pret
 (
-    id      INT AUTO_INCREMENT,
-    libelle VARCHAR(50)    NOT NULL,
-    taux    DECIMAL(15, 2) NOT NULL,
-    delai_debut_remboursement INT DEFAULT 0 ,
+    id                        INT AUTO_INCREMENT,
+    libelle                   VARCHAR(50)    NOT NULL,
+    taux                      DECIMAL(15, 2) NOT NULL,
+    delai_debut_remboursement INT DEFAULT 0,
     PRIMARY KEY (id)
 );
 
@@ -107,8 +107,8 @@ CREATE TABLE pret
     employees_id        INT            NOT NULL,
     compte_client_id    INT            NOT NULL,
     type_pret_id        INT            NOT NULL,
-    taux_assurance      DECIMAL(15, 2) DEFAULT 0.00,
-    assurance_par_mois  BOOLEAN NOT NULL DEFAULT FALSE,
+    taux_assurance      DECIMAL(15, 2)          DEFAULT 0.00,
+    assurance_par_mois  BOOLEAN        NOT NULL DEFAULT FALSE,
     PRIMARY KEY (id),
     FOREIGN KEY (modalite_id) REFERENCES modalite (id),
     FOREIGN KEY (employees_id) REFERENCES employe (id),
@@ -134,11 +134,12 @@ CREATE TABLE paiement_modalite
     date_prevu_paiment DATE           NOT NULL,
     montant_prevu      DECIMAL(15, 2) NOT NULL,
     mensualite         DECIMAL(15, 2) NOT NULL,
-    interet         DECIMAL(15, 2) NOT NULL,
-    amortissement         DECIMAL(15, 2) NOT NULL,
-    assurance         DECIMAL(15, 2) NOT NULL,
-    montant_restant        DECIMAL(15, 2) NOT NULL,
+    interet            DECIMAL(15, 2) NOT NULL,
+    amortissement      DECIMAL(15, 2) NOT NULL,
+    assurance          DECIMAL(15, 2) NOT NULL,
+    montant_restant    DECIMAL(15, 2) NOT NULL,
     pret_id            INT            NOT NULL,
+
     PRIMARY KEY (id),
     FOREIGN KEY (pret_id) REFERENCES pret (id)
 );

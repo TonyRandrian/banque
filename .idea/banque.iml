@@ -4,6 +4,8 @@
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/ws/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/ws/vendor/mikecao/flight" />
+      <excludeFolder url="file://$MODULE_DIR$/tp-flightphp-crud-MVC/tp-flightphp-crud/ws/vendor/composer" />
+      <excludeFolder url="file://$MODULE_DIR$/tp-flightphp-crud-MVC/tp-flightphp-crud/ws/vendor/mikecao/flight" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

@@ -14,7 +14,12 @@
     <include_path>
       <path value="$PROJECT_DIR$/ws/vendor/composer" />
       <path value="$PROJECT_DIR$/ws/vendor/mikecao/flight" />
+      <path value="$PROJECT_DIR$/tp-flightphp-crud-MVC/tp-flightphp-crud/ws/vendor/mikecao/flight" />
+      <path value="$PROJECT_DIR$/tp-flightphp-crud-MVC/tp-flightphp-crud/ws/vendor/composer" />
     </include_path>
+  </component>
+  <component name="PhpProjectSharedConfiguration" php_language_level="7.0">
+    <option name="suggestChangeDefaultLanguageLevel" value="false" />
   </component>
   <component name="PhpStanOptionsConfiguration">
     <option name="transferred" value="true" />
