@@ -60,9 +60,10 @@ class PretController
             }
 
             // Vérification du solde de la trésorerie
-            $solde = Fond::getLastSolde();
+            $moisDemande = substr($data['date_demande'], 0, 7); // Extraire YYYY-MM de YYYY-MM-DD
+            $solde = Fond::getSoldeForMonth($moisDemande);
             if (floatval($data['montant']) > floatval($solde)) {
-                Flight::json(['error' => "Solde de la trésorerie insuffisant pour accorder ce prêt (solde actuel : " . number_format($solde, 2, ',', ' ') . " €)"], 400);
+                Flight::json(['error' => "Solde de la trésorerie insuffisant pour accorder ce prêt pour " . $data["date_demande"] . " (solde actuel : " . number_format($solde, 2, ',', ' ') . " €)"], 400);
                 return;
             }
 

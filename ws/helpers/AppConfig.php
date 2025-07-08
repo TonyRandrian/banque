@@ -31,6 +31,10 @@ class AppConfig
                 'title' => 'Gestion des Statuts de Prêt - Banque Moderne',
                 'content' => 'status-pret'
             ],
+            'dashboard-fond' => [
+                'title' => 'dashboard-fon',
+                'content' => 'dashboard-fond'
+            ],
             'compte-client' => [
                 'title' => 'Création de Comptes Clients - Banque Moderne',
                 'content' => 'compte-client'
@@ -80,13 +84,19 @@ class AppConfig
                 'page' => 'dashboard-interets'
             ],
             [
+                'label' => 'Fond par mois',
+                'link' => $basePath . '/ws/fond/dashboard',
+                'icon' => '💰',
+                'page' => 'dashboard-fond'
+            ],
+            [
                 'label' => 'Comptes Clients',
                 'link' => $basePath . '/ws/compte-client',
                 'icon' => '👥',
                 'page' => 'compte-client'
             ],
             [
-                'label' => 'Simulatioin des prêts',
+                'label' => 'Simulation des prêts',
                 'link' => $basePath . '/ws/simulation-pret',
                 'icon' => '📊',
                 'page' => 'simulation_pret'

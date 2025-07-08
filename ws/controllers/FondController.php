@@ -45,4 +45,23 @@ class FondController
             Flight::json(['error' => $e->getMessage()], 500);
         }
     }
+
+  
+    public static function getSoldeByMonth()
+    {
+        $input = file_get_contents('php://input');
+        parse_str($input, $data);
+
+        if (empty($data['date_debut']) || empty($data['date_fin'])) {
+            Flight::json(['error' => 'Les paramètres date_debut et date_fin sont requis'], 400);
+            return;
+        }
+
+        try {
+            $result = Fond::getSoldeByMonth($data['date_debut'], $data['date_fin']);
+            Flight::json($result);
+        } catch (Exception $e) {
+            Flight::json(['error' => 'Erreur lors du calcul des soldes: ' . $e->getMessage()], 500);
+        }
+    }
 }
