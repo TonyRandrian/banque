@@ -43,8 +43,8 @@ class PretController
             $input = file_get_contents('php://input');
             parse_str($input, $data);
 
-            $modaliteStmt = $db->prepare("SELECT id FROM modalite WHERE libelle = :libelle");
-            $modaliteStmt->execute(['libelle' => 'Annuelle']);
+            $modaliteStmt = $db->prepare("SELECT id FROM modalite WHERE libelle = :libelle or libelle = :libelle2");
+            $modaliteStmt->execute(['libelle' => 'Annuelle', 'libelle2'=>'Annuel']);
             $modalite = $modaliteStmt->fetch(PDO::FETCH_ASSOC);
 
             $data['modalite_id'] = $modalite['id'];

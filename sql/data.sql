@@ -10,7 +10,7 @@ VALUES ('Pret Immobilier', 3.50, 0),
 INSERT INTO modalite (libelle, nb_mois)
 VALUES ('Mensuel', 1),
        ('Trimestriel', 3),
-       ('Annuel', 12);
+       ('Annuelle', 12);
 
 -- Statuts de prêt
 INSERT INTO enum_status_pret (libelle)

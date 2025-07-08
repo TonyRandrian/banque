@@ -18,15 +18,15 @@ class PaiementModaliteController {
         parse_str($input, $data);
 
         // ...vérification des champs requis...
-        if (
-            empty($data['date_prevu_paiment']) || empty($data['montant_prevu']) ||
-            empty($data['mensualite']) || empty($data['interet']) ||
-            empty($data['amortissement']) || !isset($data['assurance']) ||
-            empty($data['montant_restant']) || empty($data['pret_id'])
-        ) {
-            Flight::json(['error' => 'Tous les champs sont requis'], 400);
-            return;
-        }
+        // if (
+        //     empty($data['date_prevu_paiment']) || empty($data['montant_prevu']) ||
+        //     empty($data['mensualite']) || empty($data['interet']) ||
+        //     empty($data['amortissement']) || !isset($data['assurance']) ||
+        //     empty($data['montant_restant']) || empty($data['pret_id'])
+        // ) {
+        //     Flight::json(['error' => 'Tous les champs sont requis'], 400);
+        //     return;
+        // }
 
         // Vérification de la date du mouvement
         $lastDate = Fond::getLastDate();
