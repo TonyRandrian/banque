@@ -39,9 +39,11 @@
         <h3>Tableau d'amortissement</h3>
         <div id="tableau-amortissement"></div>
         <div id="validation-zone" style="margin-top:20px;display:none;">
-            <label for="compte_client_select">Choisir un compte client :</label>
-            <select id="compte_client_select"></select>
-            <button id="valider-simulation" class="btn btn-success">Valider</button>
+            <div class="form-row">
+                <label for="compte_client_select">Choisir un compte client :</label>
+                <select id="compte_client_select"></select>
+                <button id="valider-simulation" class="btn btn-success">Valider</button>
+            </div>
         </div>
     </div>
 </div>

@@ -12,12 +12,17 @@
             <div class="form-section">
                 <h4>Informations du client</h4>
                 <div class="form-row">
-                    <input type="text" id="nom" placeholder="Nom du client" required>
-                    <input type="text" id="prenom" placeholder="Prénom du client" required>
+                    <input type="text" id="nom" placeholder="Nom du client (ex: RABE)" required>
+                    <input type="text" id="prenom" placeholder="Prénom du client (ex: John)" required>
                 </div>
                 <div class="form-row">
-                    <input type="email" id="email" placeholder="Email du client" required>
-                    <input type="password" id="mdp" placeholder="Mot de passe">
+                    <input type="email" id="email" placeholder="Email du client (ex: john@example.com)" required>
+                </div>
+                <div class="password-wrapper">
+                    <input type="password" id="mdp" placeholder="Mot de passe (min. 6 caractères)" required>
+                    <button type="button" class="password-toggle" onclick="togglePasswordVisibility()">
+                        <i class="fa fa-eye" id="password-icon"></i>
+                    </button>
                 </div>
             </div>
             
@@ -56,8 +61,23 @@
         </table>
     </div>
 </div>
+<script src="/banque/assets/js/fontawesome.all.js"></script>
 
 <script>
+    function togglePasswordVisibility() {
+            var passwordInput = document.getElementById('mdp');
+            var passwordIcon = document.getElementById('password-icon');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                passwordIcon.classList.remove('fa-eye');
+                passwordIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                passwordIcon.classList.remove('fa-eye-slash');
+                passwordIcon.classList.add('fa-eye');
+            }
+    }
+
     function ajax(method, url, data, callback, errorCallback) {
         const xhr = new XMLHttpRequest();
         xhr.open(method, apiBase + url, true);
@@ -222,6 +242,22 @@
         document.getElementById("id").value = '';
         document.getElementById("mdp").placeholder = 'Mot de passe';
         document.querySelector('#compte-client-form button[type="submit"]').textContent = 'Créer le compte';
+    }
+
+    // Fonction pour toggle la visibilité du mot de passe
+    function togglePasswordVisibility() {
+        const passwordInput = document.getElementById('mdp');
+        const passwordIcon = document.getElementById('password-icon');
+        
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            passwordIcon.classList.remove('fa-eye');
+            passwordIcon.classList.add('fa-eye-slash');
+        } else {
+            passwordInput.type = 'password';
+            passwordIcon.classList.remove('fa-eye-slash');
+            passwordIcon.classList.add('fa-eye');
+        }
     }
 
     // Gestionnaire du formulaire

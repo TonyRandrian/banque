@@ -5,7 +5,7 @@ class AppConfig
 
     public static function getBasePath()
     {
-        return '/Web/S4/banque';
+        return '/banque';
     }
 
     public static function getRoutes()
