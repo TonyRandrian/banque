@@ -290,5 +290,4 @@ class PretController
             Flight::json(['error' => $e->getMessage()], 500);
         }
     }
-
 }

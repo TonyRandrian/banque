@@ -23,7 +23,7 @@
             </div>
             <div class="form-row">
                 <label for="assurance_par_mois">
-                    <input type="checkbox" id="assurance_par_mois" value="1"> Assurance par mois
+                    <input type="checkbox" id="assurance_par_mois" value="1"> Assurance payé par mois
                 </label>
             </div>
             <div class="form-actions">
@@ -43,9 +43,11 @@
                 <label for="compte_client_select">Choisir un compte client :</label>
                 <select id="compte_client_select"></select>
                 <button id="valider-simulation" class="btn btn-success">Valider</button>
+                <button id="enregistrer-simulation" class="btn btn-warning">Enregistrer simulation</button>
             </div>
         </div>
     </div>
+    <div id="mssg"></div>
 </div>
 
 <script>
@@ -140,7 +142,7 @@
     };
 
     function showMessage(message, type = 'success') {
-        const resultDiv = document.getElementById('resultat-simulation');
+        const resultDiv = document.getElementById('mssg');
         resultDiv.className = `alert alert-${type === 'error' ? 'danger' : 'success'}`;
         resultDiv.innerHTML = message;
         resultDiv.style.display = 'block';
@@ -360,6 +362,61 @@
             }
         }, (err) => {
             showMessage("Erreur lors de la création du prêt : " + err, "error");
+        });
+    };
+
+    document.getElementById('enregistrer-simulation').onclick = function () {
+        // Récupérer les infos du formulaire
+        const montant = parseFloat(document.getElementById("montant").value);
+        const duree = parseInt(document.getElementById("duree_remboursement").value, 10);
+        const date_demande = document.getElementById("date_demande").value;
+        const type_pret_id = document.getElementById("type_pret_id").value;
+        const taux_assurance = document.getElementById("taux_assurance").value || 0;
+        const assurance_par_mois = document.getElementById("assurance_par_mois").checked ? 1 : 0;
+
+        // Création du prêt
+        const pretData = `duree_remboursement=${duree}&montant=${montant}&date_demande=${date_demande}&type_pret_id=${type_pret_id}&taux_assurance=${taux_assurance}&assurance_par_mois=${assurance_par_mois}`;
+        ajax("POST", "/simulation_prets", pretData, (response) => {
+            if (response && response.data && (response.data.id || response.data.id === 0)) {
+                const pret_id = response.data.id;
+                let inserted = 0;
+                let errors = [];
+                if (simulationPaiements.length === 0) {
+                    showMessage("Aucune échéance à enregistrer. Veuillez refaire la simulation.", "error");
+                    return;
+                }
+                simulationPaiements.forEach((p, idx) => {
+                    const paiementData = `date_prevu_paiment=${p.date_prevu_paiment}&montant_prevu=${p.montant_prevu}&mensualite=${p.mensualite}&interet=${p.interet}&amortissement=${p.amortissement}&assurance=${p.assurance}&montant_restant=${p.montant_restant}&pret_id=${pret_id}`;
+                    ajax("POST", "/simulation_paiement_modalites", paiementData, () => {
+                        inserted++;
+                        if (inserted === simulationPaiements.length) {
+                            if (errors.length === 0) {
+                                showMessage("✅ Simulation prêt et échéancier enregistrés avec succès !", "success");
+                                resetForm();
+                                document.getElementById("tableau-amortissement").innerHTML = "";
+                                document.getElementById("validation-zone").style.display = "none";
+                                simulationPaiements = [];
+                            } else {
+                                showMessage("Simulation prêt créé mais certaines échéances n'ont pas pu être enregistrées :<br>" + errors.join("<br>"), "error");
+                                simulationPaiements = [];
+                            }
+                        }
+                    }, (err) => {
+                        inserted++;
+                        errors.push("Erreur ligne " + (idx + 1) + " : " + err);
+                        if (inserted === simulationPaiements.length) {
+                            showMessage("Simulation prêt créé mais certaines échéances n'ont pas pu être enregistrées :<br>" + errors.join("<br>"), "error");
+                            simulationPaiements = [];
+                        }
+                    });
+                });
+            } else if (response && response.error) {
+                showMessage("Erreur lors de la création de la simulation prêt : " + response.error, "error");
+            } else {
+                showMessage("Erreur inconnue lors de la création de la simulation prêt.", "error");
+            }
+        }, (err) => {
+            showMessage("Erreur lors de la création de la simuation prêt : " + err, "error");
         });
     };
 
