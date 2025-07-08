@@ -120,7 +120,6 @@ CREATE TABLE pret
     compte_client_id    INT            NOT NULL,
     type_pret_id        INT            NOT NULL,
     taux_assurance      DECIMAL(15, 2)          DEFAULT 0.00,
-    assurance_par_mois  BOOLEAN        NOT NULL DEFAULT FALSE,
     PRIMARY KEY (id),
     FOREIGN KEY (modalite_id) REFERENCES modalite (id),
     FOREIGN KEY (employees_id) REFERENCES employe (id),
