@@ -9,7 +9,7 @@
         <form id="type-pret-form">
             <input type="hidden" id="id">
             <div class="form-row">
-                <input type="text" id="libelle" placeholder="Libellé du type de prêt" required>
+                <input type="text" id="libelle" placeholder="Libellé du type de prêt (ex: Prêt Personnel)" required>
                 <input type="number" id="taux" placeholder="Taux (%)" step="0.01" min="0" max="100" required>
             </div>
             <div class="form-row">
