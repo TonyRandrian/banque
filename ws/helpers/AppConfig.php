@@ -84,6 +84,12 @@ class AppConfig
                 'link' => $basePath . '/ws/compte-client',
                 'icon' => '👥',
                 'page' => 'compte-client'
+            ],
+            [
+                'label' => 'Simulatioin des prêts',
+                'link' => $basePath . '/ws/simulation-pret',
+                'icon' => '📊',
+                'page' => 'simulation_pret'
             ]
         ];
     }

@@ -19,6 +19,7 @@ require_once __DIR__ . '/type_pret_routes.php';
 require_once __DIR__ . '/enum_status_pret_route.php';
 require_once __DIR__ . '/modalite_route.php';
 require_once __DIR__ . '/interet_route.php';
+
 // Route pour la page simulation de prêt
 Flight::route('GET /simulation-pret', function() {
     $data = [

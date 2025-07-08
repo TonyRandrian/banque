@@ -2,8 +2,10 @@
 require_once __DIR__ . '/../services/PretService.php';
 require_once __DIR__ . '/../models/StatusPret.php';
 
-class PretController {
-    public static function getAll() {
+class PretController
+{
+    public static function getAll()
+    {
         try {
             $prets = PretService::getAll();
             Flight::json($prets);
@@ -12,7 +14,8 @@ class PretController {
         }
     }
 
-    public static function getById($id) {
+    public static function getById($id)
+    {
         try {
             $pret = PretService::getById($id);
             Flight::json($pret);
@@ -21,10 +24,23 @@ class PretController {
         }
     }
 
-    public static function create() {
+    public static function create()
+    {
         try {
+            $db = getDB();
             $input = file_get_contents('php://input');
             parse_str($input, $data);
+
+            $modaliteStmt = $db->prepare("SELECT id FROM modalite WHERE libelle = :libelle");
+            $modaliteStmt->execute(['libelle' => 'Annuelle']);
+            $modalite = $modaliteStmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$modalite) {
+                Flight::json(['error' => "Modalité 'Annuelle' non trouvée dans la base de données"], 500);
+                return;
+            }
+
+            $data['modalite_id'] = $modalite['id'];
 
             error_log("Données reçues : " . print_r($data, true));
 
@@ -35,11 +51,13 @@ class PretController {
                     return;
                 }
             }
+
             if (!isset($data['taux_assurance'])) {
                 $data['taux_assurance'] = 0.00;
             }
+
             if (!isset($data['assurance_par_mois'])) {
-                $data['assurance_par_mois'] = 0;
+                $data['assurance_par_mois'] = false;
             }
 
             $result = PretService::create($data);
@@ -47,7 +65,7 @@ class PretController {
             // Ajout du status "Accepté" pour ce prêt via le modèle StatusPret
             if (isset($result['id'])) {
                 $pret_id = $result['id'];
-                $db = getDB();
+
                 $enumStmt = $db->prepare("SELECT id FROM enum_status_pret WHERE libelle = 'Accepté' LIMIT 1");
                 $enumStmt->execute();
                 $enum = $enumStmt->fetch(PDO::FETCH_ASSOC);
@@ -67,7 +85,8 @@ class PretController {
         }
     }
 
-    public static function update($id) {
+    public static function update($id)
+    {
         try {
             $data = Flight::request()->data;
 
@@ -78,10 +97,10 @@ class PretController {
                 if (!empty($parsedData['duree_remboursement']) && !empty($parsedData['montant'])) {
                     $data = $parsedData;
                 } else {
-                    $data = (array) $data;
+                    $data = (array)$data;
                 }
             } else {
-                $data = (array) $data;
+                $data = (array)$data;
             }
 
             if (empty($data['duree_remboursement']) || empty($data['montant']) || empty($data['date_demande']) || empty($data['modalite_id']) || empty($data['type_pret_id']) || empty($data['compte_client_id'])) {
@@ -102,7 +121,8 @@ class PretController {
         }
     }
 
-    public static function delete($id) {
+    public static function delete($id)
+    {
         try {
             $result = PretService::delete($id);
             Flight::json(['message' => 'Prêt supprimé avec succès', 'data' => $result]);
@@ -111,18 +131,22 @@ class PretController {
         }
     }
 
-    public static function getModalites() {
+    public static function getModalites()
+    {
         echo json_encode(PretService::getModalites());
     }
 
-    public static function getTypePrets() {
+    public static function getTypePrets()
+    {
         echo json_encode(PretService::getTypePrets());
     }
+
     /**
      * Web service pour les intérêts gagnés par mois (POST)
      * Attend : date_debut=YYYY-MM&date_fin=YYYY-MM
      */
-    public static function getInteretsParMois() {
+    public static function getInteretsParMois()
+    {
         $data = Flight::request()->data;
         $date_debut = isset($data['date_debut']) ? $data['date_debut'] : null;
         $date_fin = isset($data['date_fin']) ? $data['date_fin'] : null;
@@ -140,7 +164,8 @@ class PretController {
      * Web service pour les intérêts gagnés par mois pour tous les prêts (POST)
      * Attend : date_debut=YYYY-MM&date_fin=YYYY-MM
      */
-    public static function getInteretsParMoisTousPrets() {
+    public static function getInteretsParMoisTousPrets()
+    {
         $data = Flight::request()->data;
         $date_debut = isset($data['date_debut']) ? $data['date_debut'] : null;
         $date_fin = isset($data['date_fin']) ? $data['date_fin'] : null;
@@ -158,7 +183,8 @@ class PretController {
      * Web service pour les intérêts gagnés par mois pour un prêt spécifique (POST)
      * Attend : pret_id, date_debut=YYYY-MM&date_fin=YYYY-MM
      */
-    public static function getInteretsParMoisPourPret($pret_id) {
+    public static function getInteretsParMoisPourPret($pret_id)
+    {
         $data = Flight::request()->data;
         $date_debut = isset($data['date_debut']) ? $data['date_debut'] : null;
         $date_fin = isset($data['date_fin']) ? $data['date_fin'] : null;
@@ -175,7 +201,8 @@ class PretController {
     /**
      * Web service pour obtenir la liste des prêts acceptés
      */
-    public static function getPretsAcceptes() {
+    public static function getPretsAcceptes()
+    {
         require_once __DIR__ . '/../models/Pret.php';
         $result = Pret::getPretsAcceptes();
         echo json_encode($result);

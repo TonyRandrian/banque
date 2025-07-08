@@ -19,12 +19,8 @@ Flight::route('GET /compte-client', function() {
 
 // Routes API
 Flight::route('GET /compte-clients', ['CompteClientController', 'getAll']);
-Flight::route('GET /compte_clients', ['CompteClientController', 'getAll']);
 Flight::route('GET /compte-clients/@id', ['CompteClientController', 'getById']);
-Flight::route('GET /compte_clients/@id', ['CompteClientController', 'getById']);
 Flight::route('POST /compte-clients', ['CompteClientController', 'create']);
-Flight::route('POST /compte_clients', ['CompteClientController', 'create']);
 Flight::route('PUT /compte-clients/@id', ['CompteClientController', 'update']);
-Flight::route('PUT /compte_clients/@id', ['CompteClientController', 'update']);
 Flight::route('DELETE /compte-clients/@id', ['CompteClientController', 'delete']);
-Flight::route('DELETE /compte_clients/@id', ['CompteClientController', 'delete']);
+
