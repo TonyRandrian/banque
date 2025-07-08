@@ -25,16 +25,6 @@ insert into compte_client(numero, date_creation, client_id)
 values ('CPT001', '2024-01-01', 1),
        ('CPT002', '2024-01-15', 2);
 
--- Clients de test
-insert into client(email, prenom, nom, mdp)
-values ('client1@test.com', 'Jean', 'Dupont', 'password123'),
-       ('client2@test.com', 'Marie', 'Martin', 'password456');
-
--- Comptes clients
-insert into compte_client(numero, date_creation, client_id)
-values ('CPT001', '2024-01-01', 1),
-       ('CPT002', '2024-01-15', 2);
-
 -- Prêts
 insert into pret(duree_remboursement, montant, date_demande, modalite_id, type_pret_id, compte_client_id)
 values (12, 6000, '2024-01-10', 1, 1, 1),
@@ -89,9 +79,9 @@ values ('2024-03-01', 2172.57, 320.00, 1852.57, 2),
        ('2026-03-01', 2172.57, 0.47, 2172.10, 2);
 
 -- Employés pour les tests
-insert into employe(nom, prenom, email, mdp) values
-("Dupont", "Jean", "jean.dupont@banque.fr", "$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi"),
-("Martin", "Marie", "marie.martin@banque.fr", "$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi");
+insert into employe(nom, prenom, email, mdp)
+values ("Dupont", "Jean", "jean.dupont@banque.fr", "$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi"),
+       ("Martin", "Marie", "marie.martin@banque.fr", "$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi");
 -- Jeu de données pour tester la simulation de prêt
 
 -- Clients
