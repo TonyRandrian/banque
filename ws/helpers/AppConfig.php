@@ -81,7 +81,7 @@ class AppConfig
             ],
             [
                 'label' => 'Comptes Clients',
-                'link' => '/banque/ws/compte-client',
+                'link' => $basePath . '/ws/compte-client',
                 'icon' => '👥',
                 'page' => 'compte-client'
             ]
@@ -90,13 +90,13 @@ class AppConfig
 
     public static function getCurrentPage()
     {
-        return isset($_GET['page']) ? $_GET['page'] : 'accueil';
+        return $_GET['page'] ?? 'accueil';
     }
 
     public static function getPageConfig($page)
     {
         $routes = self::getRoutes();
-        return isset($routes[$page]) ? $routes[$page] : $routes['accueil'];
+        return $routes[$page] ?? $routes['accueil'];
     }
 
     public static function getCssPath()
@@ -107,7 +107,7 @@ class AppConfig
 
     public static function getActivePage()
     {
-        $uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
+        $uri = $_SERVER['REQUEST_URI'] ?? '';
         $path = parse_url($uri, PHP_URL_PATH);
         $path = rtrim($path, '/');
 

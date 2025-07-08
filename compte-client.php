@@ -58,8 +58,6 @@
 </div>
 
 <script>
-    const apiBase = "http://localhost/banque/ws";
-
     function ajax(method, url, data, callback, errorCallback) {
         const xhr = new XMLHttpRequest();
         xhr.open(method, apiBase + url, true);
