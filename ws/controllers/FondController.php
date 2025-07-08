@@ -21,11 +21,11 @@ class FondController
             $input = file_get_contents('php://input');
             parse_str($input, $data);
 
-            // Validation
+            /*// Validation
             if (!isset($data['montant']) || floatval($data['montant']) <= 0) {
                 Flight::json(['error' => 'Veuillez saisir un montant valide supérieur à 0'], 400);
                 return;
-            }
+            }*/
             if (empty($data['date_creation'])) {
                 Flight::json(['error' => 'Veuillez choisir une date de mouvement'], 400);
                 return;

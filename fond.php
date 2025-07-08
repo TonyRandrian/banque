@@ -141,10 +141,10 @@
         const montant = document.getElementById('montant').value;
         const date_creation = document.getElementById('date_creation').value;
 
-        if (!montant || parseFloat(montant) <= 0) {
+        /*if (!montant || parseFloat(montant) <= 0) {
             showMessage('Veuillez saisir un montant valide supérieur à 0', 'error');
             return;
-        }
+        }*/
         if (!date_creation) {
             showMessage('Veuillez choisir une date de mouvement', 'error');
             return;
